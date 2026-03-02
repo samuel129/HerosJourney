@@ -4,6 +4,8 @@ extends Node
 @export_subgroup("Nodes")
 @export var sprite: AnimatedSprite2D
 
+var jump_anim_locked: bool = false
+
 func _ready() -> void:
 	if not sprite.animation_finished.is_connected(_on_anim_finished):
 		sprite.animation_finished.connect(_on_anim_finished)
@@ -29,7 +31,8 @@ func handle_move_animation(move_direction: float, sprinting: bool) -> void:
 	else:
 		play_if_new("walk")
 		
-
+# FIX: When jump is cancelled, the animation should not cancel. 
+# jump -> fall -> fall_loop should be the correct sequence of animations, no matter what.
 func handle_jump_animation(is_jumping: bool, is_falling: bool) -> void:
 	if is_jumping:
 		play_if_new("jump")

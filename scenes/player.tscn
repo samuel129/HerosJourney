@@ -198,10 +198,6 @@ region = Rect2(1024, 0, 128, 128)
 atlas = ExtResource("2_ur7pv")
 region = Rect2(1152, 0, 128, 128)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_wnwbv"]
-atlas = ExtResource("3_y4r1p")
-region = Rect2(0, 0, 128, 128)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_gl8cc"]
 atlas = ExtResource("3_y4r1p")
 region = Rect2(128, 0, 128, 128)
@@ -526,9 +522,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_wnwbv")
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_gl8cc")
 }, {
 "duration": 1.0,
@@ -691,9 +684,7 @@ jump_component = NodePath("JumpComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=673780519]
 sprite_frames = SubResource("SpriteFrames_vau08")
-animation = &"fall"
-frame = 3
-frame_progress = 1.0
+animation = &"jump"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1380215214]
 shape = SubResource("CapsuleShape2D_qsb7e")
