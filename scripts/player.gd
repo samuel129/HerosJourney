@@ -14,9 +14,10 @@ func _physics_process(delta: float) -> void:
 	var sprinting = input_component.is_sprinting()
 	
 	movement_component.handle_horizontal_movement(self, dir, sprinting)
-	jump_component.handle_jump(self, input_component.get_jump_input(), input_component.is_jump_held())	
+	jump_component.handle_jump(self, delta, input_component.get_jump_input(), input_component.is_jump_held())	
 	if not jump_component.is_jumping and not gravity_component.is_falling:
 		animation_component.handle_move_animation(dir, sprinting)
 	animation_component.handle_jump_animation(jump_component.is_jumping, gravity_component.is_falling)
+	
 	
 	move_and_slide()
