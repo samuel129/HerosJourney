@@ -471,7 +471,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_gvmy4")
 }],
-"loop": true,
+"loop": false,
 "name": &"fall",
 "speed": 12.0
 }, {
@@ -691,10 +691,16 @@ jump_component = NodePath("JumpComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=673780519]
 sprite_frames = SubResource("SpriteFrames_vau08")
-animation = &"dash"
+animation = &"fall"
+frame = 3
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1380215214]
 shape = SubResource("CapsuleShape2D_qsb7e")
+
+[node name="ground_check" type="RayCast2D" parent="." unique_id=1230468071]
+position = Vector2(0, 15)
+target_position = Vector2(0, 10)
 
 [node name="GravityComponent" parent="." unique_id=2040818991 instance=ExtResource("10_d2wvv")]
 

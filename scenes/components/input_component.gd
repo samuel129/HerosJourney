@@ -15,3 +15,5 @@ func is_jump_held() -> bool:
 func is_sprinting() -> bool:
 	return Input.is_action_pressed("sprint")
 	
+func is_fast_falling() -> bool:
+	return Input.is_action_pressed("move_down")

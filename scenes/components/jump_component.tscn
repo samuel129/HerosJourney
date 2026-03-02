@@ -2,5 +2,10 @@
 
 [ext_resource type="Script" uid="uid://c7b4chwxrdt6s" path="res://scenes/components/jump_component.gd" id="1_hg34l"]
 
-[node name="JumpComponent" type="Node" unique_id=1458893281]
+[node name="JumpComponent" type="Node" unique_id=1458893281 node_paths=PackedStringArray("jump_buffer_timer")]
 script = ExtResource("1_hg34l")
+jump_buffer_timer = NodePath("jump_buffer")
+
+[node name="jump_buffer" type="Timer" parent="." unique_id=1810362575]
+wait_time = 0.1
+one_shot = true
