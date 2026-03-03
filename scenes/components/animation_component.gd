@@ -5,6 +5,7 @@ extends Node
 @export var sprite: AnimatedSprite2D
 
 signal spawn_finished
+signal attack_finished
 
 var animation_locked: bool = false
 
@@ -25,7 +26,6 @@ func handle_horizontal_flip(move_direction: float) -> void:
 		return
 
 	sprite.flip_h = false if move_direction > 0 else true
-	
 
 func handle_move_animation(move_direction: float, sprinting: bool) -> void:
 	if animation_locked:
@@ -49,8 +49,19 @@ func handle_jump_animation(is_jumping: bool, is_falling: bool) -> void:
 	elif is_falling:
 		if sprite.animation != "fall" and sprite.animation != "fall_loop":
 			play_if_new("fall")
-		
+			
+func handle_attack_animation() -> void:
+	if animation_locked:
+		return
+	animation_locked = true
+	sprite.play("combo_fast")
+	
+	
 func _on_anim_finished() -> void:
+	if sprite.animation == "combo_fast":
+		animation_locked = false
+		attack_finished.emit()
+		return
 	if animation_locked:
 		return
 	if sprite.animation == "fall":

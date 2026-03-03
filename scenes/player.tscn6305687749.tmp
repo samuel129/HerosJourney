@@ -24,7 +24,6 @@
 [ext_resource type="PackedScene" uid="uid://co6so2lwvs63a" path="res://scenes/components/animation_component.tscn" id="16_fulsm"]
 [ext_resource type="PackedScene" uid="uid://cqtj7a7772fe6" path="res://scenes/components/jump_component.tscn" id="17_qfm1y"]
 [ext_resource type="PackedScene" uid="uid://dwab6gkfo7bdu" path="res://scenes/components/health_component.tscn" id="18_fulsm"]
-[ext_resource type="PackedScene" uid="uid://bry5pfc2g8hll" path="res://scenes/components/attack_component.tscn" id="25_ke2ow"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_oxcmq"]
 atlas = ExtResource("2_l71n6")
@@ -622,9 +621,9 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_kp0if")
 }],
-"loop": false,
-"name": &"combo_fast",
-"speed": 18.0
+"loop": true,
+"name": &"combo_1",
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -657,8 +656,8 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_mcvyg")
 }],
-"loop": false,
-"name": &"combo_mid",
+"loop": true,
+"name": &"combo_2",
 "speed": 12.0
 }, {
 "frames": [{
@@ -716,8 +715,8 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_jopkk")
 }],
-"loop": false,
-"name": &"combo_strong",
+"loop": true,
+"name": &"combo_3",
 "speed": 12.0
 }, {
 "frames": [{
@@ -1108,7 +1107,10 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qsb7e"]
 radius = 6.0
 
-[node name="Player" type="CharacterBody2D" unique_id=563289409 node_paths=PackedStringArray("gravity_component", "input_component", "movement_component", "animation_component", "jump_component", "health_component", "attack_component")]
+[sub_resource type="CircleShape2D" id="CircleShape2D_l71n6"]
+radius = 19.0
+
+[node name="Player" type="CharacterBody2D" unique_id=563289409 node_paths=PackedStringArray("gravity_component", "input_component", "movement_component", "animation_component", "jump_component", "health_component")]
 script = ExtResource("1_y4r1p")
 gravity_component = NodePath("GravityComponent")
 input_component = NodePath("InputComponent")
@@ -1116,11 +1118,10 @@ movement_component = NodePath("MovementComponent")
 animation_component = NodePath("AnimationComponent")
 jump_component = NodePath("JumpComponent")
 health_component = NodePath("HealthComponent")
-attack_component = NodePath("AttackComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=673780519]
 sprite_frames = SubResource("SpriteFrames_vau08")
-animation = &"combo_fast"
+animation = &"combo_1"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1380215214]
 shape = SubResource("CapsuleShape2D_qsb7e")
@@ -1142,4 +1143,11 @@ sprite = NodePath("../AnimatedSprite2D")
 
 [node name="HealthComponent" parent="." unique_id=1950208327 instance=ExtResource("18_fulsm")]
 
-[node name="AttackComponent" parent="." unique_id=1785104079 instance=ExtResource("25_ke2ow")]
+[node name="AttackComponent" parent="." unique_id=137074740 instance=ExtResource("10_d2wvv")]
+
+[node name="AttackHitbox" type="Area2D" parent="." unique_id=860828289]
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox" unique_id=450407706]
+position = Vector2(31, -2)
+shape = SubResource("CircleShape2D_l71n6")

@@ -6,7 +6,7 @@ extends Node
 
 @export_subgroup("Settings")
 @export var jump_velocity: float = -350.0
-var coyote_time: float = 0.15
+var coyote_time: float = 0.12
 var coyote_timer: float = 0.0
 
 var is_jumping: bool = false
