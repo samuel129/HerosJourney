@@ -11,13 +11,16 @@ config_version=5
 [application]
 
 config/name="Hero's Journey"
-run/main_scene="uid://8w2fwwykmxbv"
+run/main_scene="uid://cfkbstyyj2vm3"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
+RunManager="*uid://dyrqsylnostkx"
+<<<<<<<UpdatedupstreamRunManage="*uid://dyrqsylnostkx"
 RunManage="*uid://dyrqsylnostkx"
+LevelLoader="*uid://bnj8v08t0uy5u"
 
 [display]
 

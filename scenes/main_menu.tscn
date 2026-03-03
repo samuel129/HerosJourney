@@ -1,8 +1,8 @@
-[gd_scene format=3 uid="uid://8w2fwwykmxbv"]
+[gd_scene format=3 uid="uid://cfkbstyyj2vm3"]
 
-[ext_resource type="Script" uid="uid://b3p8pjmmvr5n6" path="res://scenes/components/main_menu.gd" id="1_l6cm7"]
-[ext_resource type="Texture2D" uid="uid://caj8nswd8qg2n" path="res://assets/art/ui/menubackground.png" id="2_ekxnf"]
-[ext_resource type="FontFile" uid="uid://nkxktoiqvu4x" path="res://assets/fonts/Pixelpurl-0vBPP.ttf" id="2_wu84c"]
+[ext_resource type="Script" path="res://scenes/components/main_menu.gd" id="1_gu2dv"]
+[ext_resource type="FontFile" uid="uid://nkxktoiqvu4x" path="res://assets/fonts/Pixelpurl-0vBPP.ttf" id="2_pgwer"]
+[ext_resource type="Texture2D" uid="uid://caj8nswd8qg2n" path="res://assets/art/ui/menubackground.png" id="3_fsq1i"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wu84c"]
 bg_color = Color(0.35686275, 0.28627452, 0.23921569, 1)
@@ -24,14 +24,14 @@ corner_detail = 15
 [sub_resource type="Theme" id="Theme_wu84c"]
 Button/colors/font_color = Color(0.9529412, 0.8745098, 0.5882353, 1)
 Button/font_sizes/font_size = 13
-Button/fonts/font = ExtResource("2_wu84c")
+Button/fonts/font = ExtResource("2_pgwer")
 Button/styles/hover = SubResource("StyleBoxFlat_wu84c")
 Button/styles/normal = SubResource("StyleBoxFlat_bqqt6")
 
 [node name="MainMenu" type="Node2D" unique_id=1864574091]
 
 [node name="Main Menu" type="Node2D" parent="." unique_id=1933206506]
-script = ExtResource("1_l6cm7")
+script = ExtResource("1_gu2dv")
 
 [node name="Button_Manager" type="Control" parent="Main Menu" unique_id=1110405899]
 layout_mode = 3
@@ -44,7 +44,7 @@ metadata/_edit_use_anchors_ = true
 [node name="Menubackground" type="Sprite2D" parent="Main Menu/Button_Manager" unique_id=497224509]
 position = Vector2(162, 82)
 scale = Vector2(1.4, 1.3916668)
-texture = ExtResource("2_ekxnf")
+texture = ExtResource("3_fsq1i")
 
 [node name="Start" type="Button" parent="Main Menu/Button_Manager" unique_id=1430061358]
 layout_mode = 1

@@ -4,17 +4,23 @@ extends Node
 @export_subgroup("Nodes")
 @export var sprite: AnimatedSprite2D
 
-var jump_anim_locked: bool = false
+signal spawn_finished
+
+var animation_locked: bool = false
 
 func _ready() -> void:
 	if not sprite.animation_finished.is_connected(_on_anim_finished):
 		sprite.animation_finished.connect(_on_anim_finished)
 
 func play_if_new(anim: String) -> void:
+	if animation_locked:
+		return
 	if sprite.animation != anim:
 		sprite.play(anim)
 
 func handle_horizontal_flip(move_direction: float) -> void:
+	if animation_locked:
+		return
 	if move_direction == 0:
 		return
 
@@ -22,6 +28,8 @@ func handle_horizontal_flip(move_direction: float) -> void:
 	
 
 func handle_move_animation(move_direction: float, sprinting: bool) -> void:
+	if animation_locked:
+		return
 	handle_horizontal_flip(move_direction)
 	
 	if move_direction == 0:
@@ -34,6 +42,8 @@ func handle_move_animation(move_direction: float, sprinting: bool) -> void:
 # FIX: When jump is cancelled, the animation should not cancel. 
 # jump -> fall -> fall_loop should be the correct sequence of animations, no matter what.
 func handle_jump_animation(is_jumping: bool, is_falling: bool) -> void:
+	if animation_locked:
+		return
 	if is_jumping:
 		play_if_new("jump")
 	elif is_falling:
@@ -41,6 +51,17 @@ func handle_jump_animation(is_jumping: bool, is_falling: bool) -> void:
 			play_if_new("fall")
 		
 func _on_anim_finished() -> void:
+	if animation_locked:
+		return
 	if sprite.animation == "fall":
 		sprite.play("fall_loop")
 		
+func play_spawn_animation() -> void:
+	animation_locked = true
+	sprite.play("spawn")
+	sprite.animation_finished.connect(_on_spawn_anim_finished, CONNECT_ONE_SHOT)
+
+func _on_spawn_anim_finished() -> void:
+	if sprite.animation == "spawn":
+		animation_locked = false
+		spawn_finished.emit()

@@ -1,4 +1,3 @@
-class_name RunManager
 extends Node
 
 var run_data: RunData = null
