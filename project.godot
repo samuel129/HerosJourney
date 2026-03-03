@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Hero's Journey"
-run/main_scene="uid://uohwgnen10us"
+run/main_scene="uid://8w2fwwykmxbv"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+RunManage="*uid://dyrqsylnostkx"
 
 [display]
 
@@ -22,6 +26,10 @@ window/size/viewport_height=180
 window/size/window_width_override=2560
 window/size/window_height_override=1440
 window/stretch/mode="viewport"
+
+[gui]
+
+theme/custom_font="uid://nkxktoiqvu4x"
 
 [input]
 

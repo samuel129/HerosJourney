@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://8w2fwwykmxbv"]
+
+[ext_resource type="Script" uid="uid://b3p8pjmmvr5n6" path="res://scenes/components/main_menu.gd" id="1_l6cm7"]
+[ext_resource type="Texture2D" uid="uid://caj8nswd8qg2n" path="res://assets/art/ui/menubackground.png" id="2_ekxnf"]
+[ext_resource type="FontFile" uid="uid://nkxktoiqvu4x" path="res://assets/fonts/Pixelpurl-0vBPP.ttf" id="2_wu84c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wu84c"]
+bg_color = Color(0.35686275, 0.28627452, 0.23921569, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bqqt6"]
+bg_color = Color(0.35686275, 0.28627452, 0.23921569, 1)
+border_width_bottom = 4
+border_color = Color(0.23137255, 0.1882353, 0.15686275, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 15
+
+[sub_resource type="Theme" id="Theme_wu84c"]
+Button/colors/font_color = Color(0.9529412, 0.8745098, 0.5882353, 1)
+Button/font_sizes/font_size = 13
+Button/fonts/font = ExtResource("2_wu84c")
+Button/styles/hover = SubResource("StyleBoxFlat_wu84c")
+Button/styles/normal = SubResource("StyleBoxFlat_bqqt6")
+
+[node name="MainMenu" type="Node2D" unique_id=1864574091]
+
+[node name="Main Menu" type="Node2D" parent="." unique_id=1933206506]
+script = ExtResource("1_l6cm7")
+
+[node name="Button_Manager" type="Control" parent="Main Menu" unique_id=1110405899]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = SubResource("Theme_wu84c")
+metadata/_edit_use_anchors_ = true
+
+[node name="Menubackground" type="Sprite2D" parent="Main Menu/Button_Manager" unique_id=497224509]
+position = Vector2(162, 82)
+scale = Vector2(1.4, 1.3916668)
+texture = ExtResource("2_ekxnf")
+
+[node name="Start" type="Button" parent="Main Menu/Button_Manager" unique_id=1430061358]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.875
+anchor_top = 2.6
+anchor_right = 2.025
+anchor_bottom = 3.375
+offset_left = 100.0
+offset_top = -45.0
+offset_right = 106.0
+offset_bottom = -52.0
+text = "Start"
+
+[node name="Quit" type="Button" parent="Main Menu/Button_Manager" unique_id=402054808]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 115.0
+offset_top = 91.0
+offset_right = 167.0
+offset_bottom = 115.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Quit"
+
+[node name="Controls" type="Button" parent="Main Menu/Button_Manager" unique_id=49792201]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 115.0
+offset_top = 65.0
+offset_right = 167.0
+offset_bottom = 89.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Controls"
+
+[connection signal="pressed" from="Main Menu/Button_Manager/Start" to="Main Menu" method="_on_start_pressed"]
+[connection signal="pressed" from="Main Menu/Button_Manager/Quit" to="Main Menu" method="_on_quit_pressed"]
+[connection signal="pressed" from="Main Menu/Button_Manager/Controls" to="Main Menu" method="_on_controls_pressed"]

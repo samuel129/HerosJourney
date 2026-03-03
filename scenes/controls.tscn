@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://dg70byhjiay8m"]
+
+[ext_resource type="Texture2D" uid="uid://d4nvq1riap0cq" path="res://assets/art/ui/control background.png" id="1_i2gav"]
+[ext_resource type="Script" uid="uid://d0p0hpat18txo" path="res://scenes/control_background.gd" id="2_5tddo"]
+[ext_resource type="Texture2D" uid="uid://oiglthkgt7px" path="res://assets/art/ui/xbutton.png" id="3_cywyo"]
+[ext_resource type="Texture2D" uid="uid://cvrnu24fea367" path="res://assets/art/ui/xbutton hover.png" id="4_ihl6s"]
+
+[node name="Controls" type="Node2D" unique_id=1895149623]
+
+[node name="ControlBackground" type="Sprite2D" parent="." unique_id=1323416255]
+position = Vector2(155.99998, 88.99999)
+scale = Vector2(1.7, 1.7)
+texture = ExtResource("1_i2gav")
+script = ExtResource("2_5tddo")
+
+[node name="Exit" type="TextureButton" parent="." unique_id=1668999483]
+offset_left = 179.0
+offset_top = 62.0
+offset_right = 199.0
+offset_bottom = 82.0
+texture_normal = ExtResource("3_cywyo")
+texture_hover = ExtResource("4_ihl6s")
+
+[connection signal="pressed" from="Exit" to="ControlBackground" method="_on_exit_pressed"]
