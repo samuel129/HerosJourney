@@ -56,6 +56,10 @@ func handle_attack_animation() -> void:
 		return
 	animation_locked = true
 	sprite.play("combo_fast")
+
+func play_death_animation() -> void:
+	animation_locked = true
+	sprite.play("death")
 	
 	
 func _on_anim_finished() -> void:

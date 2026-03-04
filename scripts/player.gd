@@ -18,6 +18,9 @@ var controls_locked: bool = true
 var facing_dir: float
 var hurt_cooldown: float = 0.0
 var _footsteps_on := false
+var is_dead: bool = false
+
+signal player_died
 
 func _ready() -> void:
 	add_to_group("player")
@@ -25,13 +28,24 @@ func _ready() -> void:
 		RunManager.start_new_run()
 	_ensure_progression_components()
 	initialize_from_run_data()
-	
+	_connect_runtime_signals()
 	if RunManager.run_data != null:
-		controls_locked = true
-		await get_tree().process_frame
-		animation_component.play_spawn_animation()
-		animation_component.spawn_finished.connect(_on_spawn_finished, CONNECT_ONE_SHOT)
+		play_spawn_sequence()
+
+func _connect_runtime_signals() -> void:
+	if animation_component and not animation_component.spawn_finished.is_connected(_on_spawn_finished):
+		animation_component.spawn_finished.connect(_on_spawn_finished)
+	if animation_component and not animation_component.attack_finished.is_connected(_on_attack_finished):
 		animation_component.attack_finished.connect(_on_attack_finished)
+	if health_component and not health_component.died.is_connected(_on_health_component_died):
+		health_component.died.connect(_on_health_component_died)
+
+func play_spawn_sequence() -> void:
+	controls_locked = true
+	is_dead = false
+	await get_tree().process_frame
+	if animation_component:
+		animation_component.play_spawn_animation()
 
 func _on_spawn_finished() -> void:
 	controls_locked = false
@@ -97,6 +111,11 @@ func _ensure_progression_components() -> void:
 			special_meter_component = sm_comp
 
 func _physics_process(delta: float) -> void:
+	if is_dead:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+
 	hurt_cooldown = maxf(0.0, hurt_cooldown - delta)
 	var horizontal = 0 if controls_locked else input_component.input_horizontal
 	var jump = false if controls_locked else input_component.get_jump_input()
@@ -135,9 +154,39 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func receive_damage(amount: int) -> void:
+	if is_dead:
+		return
 	if hurt_cooldown > 0.0:
 		return
 	if health_component == null:
 		return
 	health_component.take_damage(amount)
 	hurt_cooldown = 0.4
+
+func respawn_at(spawn_position: Vector2) -> void:
+	global_position = spawn_position
+	velocity = Vector2.ZERO
+	hurt_cooldown = 0.0
+	_footsteps_on = false
+	if Footstep:
+		Footstep.stop()
+
+	if health_component:
+		health_component.current_health = health_component.max_health
+		health_component.health_changed.emit(health_component.current_health, health_component.max_health)
+		if RunManager.is_run_active and RunManager.run_data:
+			RunManager.run_data.stats["health"] = health_component.current_health
+
+	play_spawn_sequence()
+
+func _on_health_component_died() -> void:
+	if is_dead:
+		return
+	is_dead = true
+	controls_locked = true
+	velocity = Vector2.ZERO
+	if Footstep:
+		Footstep.stop()
+	if animation_component:
+		animation_component.play_death_animation()
+	player_died.emit()
