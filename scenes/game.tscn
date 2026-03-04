@@ -36,13 +36,5 @@ follow_target = NodePath("../Player")
 
 [node name="LevelContainer" type="Node2D" parent="." unique_id=1967514355]
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=264841395]
-z_index = -1
-offset_left = -406.0
-offset_top = -108.0
-offset_right = 1182.0
-offset_bottom = 606.0
-color = Color(0.66267854, 0.66267854, 0.66267854, 1)
-
 [node name="HUD" parent="." unique_id=1541716179 instance=ExtResource("2_hud")]
 bar_lerp_speed = null

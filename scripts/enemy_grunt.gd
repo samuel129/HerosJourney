@@ -19,6 +19,7 @@ var attack_cooldown: float = 0.0
 var attack_windup_timer: float = 0.0
 var attack_queued: bool = false
 var target_player: Node2D = null
+var knockback_timer: float = 0.0
 
 func _ready() -> void:
 	add_to_group("enemies")
@@ -30,11 +31,16 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	attack_cooldown = maxf(0.0, attack_cooldown - delta)
 	attack_windup_timer = maxf(0.0, attack_windup_timer - delta)
-
+	knockback_timer = maxf(0.0, knockback_timer - delta)
+	
 	if not is_on_floor():
 		velocity.y += gravity * delta
-	else:
+	elif velocity.y > 0:
 		velocity.y = 0.0
+		
+	if knockback_timer > 0.0:
+		move_and_slide()
+		return
 
 	var player := get_tree().get_first_node_in_group("player") as Node2D
 	target_player = player
@@ -61,7 +67,7 @@ func _physics_process(delta: float) -> void:
 			if target_direction == 0.0:
 				target_direction = float(facing)
 		else:
-			target_direction = _get_patrol_direction()
+			target_direction = 0.0 # Disabled _get_patrol_direction() here
 	else:
 		target_direction = _get_patrol_direction()
 
@@ -134,3 +140,7 @@ func take_damage(amount: int) -> void:
 	_update_health_bar()
 	if health <= 0:
 		queue_free()
+		
+func apply_knockback(kb_vel: Vector2, duration: float = 0.12) -> void:
+	velocity = kb_vel
+	knockback_timer = duration

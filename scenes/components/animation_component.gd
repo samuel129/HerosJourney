@@ -10,6 +10,7 @@ signal attack_finished
 var animation_locked: bool = false
 
 func _ready() -> void:
+	sprite.play("spawn")
 	if not sprite.animation_finished.is_connected(_on_anim_finished):
 		sprite.animation_finished.connect(_on_anim_finished)
 

@@ -31,6 +31,9 @@ func _ready() -> void:
 
 func _on_spawn_finished() -> void:
 	controls_locked = false
+	var portal = get_tree().get_first_node_in_group("spawn_portal")
+	if portal:
+		portal.play_disappear()
 
 func _on_attack_finished() -> void:
 	controls_locked = false

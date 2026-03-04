@@ -18,6 +18,15 @@ var look_offset: Vector2 = Vector2.ZERO
 var fall_look_offset_y: float = 0.0
 
 
+func _ready() -> void:
+	position_smoothing_enabled = false
+	look_offset = Vector2.ZERO
+	fall_look_offset_y = 0.0
+	if follow_target:
+		global_position = follow_target.global_position + base_offset
+	await get_tree().process_frame
+	position_smoothing_enabled = true
+
 func _process(delta: float) -> void:
 	if follow_target == null:
 		return
