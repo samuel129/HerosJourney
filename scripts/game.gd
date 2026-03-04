@@ -4,7 +4,9 @@ extends Node2D
 @onready var player = $Player
 
 @onready var level_container: Node = $LevelContainer
+@export var enemy_scene: PackedScene
 var current_level: Node = null
+var active_enemies: Array[Node] = []
 
 func _process(_delta):
 
@@ -21,6 +23,8 @@ func _process(_delta):
 		hud.set_exp(xp.experience, xp.exp_to_next)
 		
 func _ready():
+	if enemy_scene == null:
+		enemy_scene = load("res://scenes/enemies/enemy_grunt.tscn")
 	var random_level = LevelLoader.pick_random_level()
 	load_level(random_level)
 	_hook_hud_signals()
@@ -30,6 +34,7 @@ func load_level(level_path: String):
 	if current_level:
 		current_level.queue_free()
 		current_level = null
+	clear_active_enemies()
 
 	# Instance new level
 	var lvl = load(level_path).instantiate()
@@ -41,6 +46,27 @@ func load_level(level_path: String):
 		var spawn = lvl.get_node("PlayerSpawn").global_position
 		$Player.global_position = spawn
 		$Camera2D.global_position = spawn
+		spawn_enemies(spawn)
+
+func clear_active_enemies() -> void:
+	for enemy in active_enemies:
+		if is_instance_valid(enemy):
+			enemy.queue_free()
+	active_enemies.clear()
+
+func spawn_enemies(spawn: Vector2) -> void:
+	if enemy_scene == null:
+		return
+	var offsets := [
+		Vector2(170, -8),
+		Vector2(290, -8),
+		Vector2(420, -8),
+	]
+	for offset in offsets:
+		var enemy = enemy_scene.instantiate()
+		current_level.add_child(enemy)
+		enemy.global_position = spawn + offset
+		active_enemies.append(enemy)
 		
 func _hook_hud_signals() -> void:
 	# Let the HUD apply upgrades to the player

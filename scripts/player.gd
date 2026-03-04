@@ -13,8 +13,10 @@ extends CharacterBody2D
 
 var controls_locked: bool = true
 var facing_dir: float
+var hurt_cooldown: float = 0.0
 
 func _ready() -> void:
+	add_to_group("player")
 	if RunManager.run_data == null:
 		RunManager.start_new_run()
 	_ensure_progression_components()
@@ -88,6 +90,7 @@ func _ensure_progression_components() -> void:
 			special_meter_component = sm_comp
 
 func _physics_process(delta: float) -> void:
+	hurt_cooldown = maxf(0.0, hurt_cooldown - delta)
 	var horizontal = 0 if controls_locked else input_component.input_horizontal
 	var jump = false if controls_locked else input_component.get_jump_input()
 	
@@ -114,3 +117,11 @@ func _physics_process(delta: float) -> void:
 			controls_locked = true
 	
 	move_and_slide()
+
+func receive_damage(amount: int) -> void:
+	if hurt_cooldown > 0.0:
+		return
+	if health_component == null:
+		return
+	health_component.take_damage(amount)
+	hurt_cooldown = 0.4
