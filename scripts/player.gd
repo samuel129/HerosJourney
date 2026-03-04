@@ -10,10 +10,14 @@ extends CharacterBody2D
 @export var attack_component: AttackComponent
 @export var special_meter_component: SpecialMeterComponent
 @export var experience_component: ExperienceComponent
+@export var Footstep: AudioStreamPlayer2D
+@export var Sword_attack: AudioStreamPlayer2D
+
 
 var controls_locked: bool = true
 var facing_dir: float
 var hurt_cooldown: float = 0.0
+var _footsteps_on := false
 
 func _ready() -> void:
 	add_to_group("player")
@@ -99,6 +103,14 @@ func _physics_process(delta: float) -> void:
 	
 	var fast_falling = input_component.is_fast_falling()
 	var dir = horizontal
+	var should_play_footsteps := (not controls_locked) and is_on_floor() and absf(dir) > 0.01
+	
+	if should_play_footsteps and not _footsteps_on:
+		Footstep.play()
+		_footsteps_on = true
+	elif not should_play_footsteps and _footsteps_on:
+		Footstep.stop()
+		_footsteps_on = false
 	if dir != 0:
 		facing_dir = dir
 	var sprinting = input_component.is_sprinting()
@@ -114,6 +126,7 @@ func _physics_process(delta: float) -> void:
 	
 	var attack = false if controls_locked else input_component.get_attack_input()
 	if attack_component.can_attack and attack:
+		Sword_attack.play()
 		attack_component.handle_attack(facing_dir, self)
 		animation_component.handle_attack_animation()
 		if self.is_on_floor():
