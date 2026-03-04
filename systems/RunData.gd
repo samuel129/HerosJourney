@@ -27,7 +27,13 @@ func _init() -> void:
 	
 	resources = {
 		"gold": 0,
+		# Progression
+		"level": 1,
 		"experience": 0,
+		"exp_to_next": 100,
+		# Combat resources
+		"special": 0,
+		"special_max": 100,
 	}
 	
 	# Random perks gained during run (new moves/abilities, stat buffs)

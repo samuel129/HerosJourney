@@ -18,8 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 RunManager="*uid://dyrqsylnostkx"
-<<<<<<<UpdatedupstreamRunManage="*uid://dyrqsylnostkx"
-RunManage="*uid://dyrqsylnostkx"
 LevelLoader="*uid://bnj8v08t0uy5u"
 
 [display]

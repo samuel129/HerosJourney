@@ -8,6 +8,8 @@ extends CharacterBody2D
 @export var jump_component: JumpComponent
 @export var health_component: HealthComponent
 @export var attack_component: AttackComponent
+@export var special_meter_component: SpecialMeterComponent
+@export var experience_component: ExperienceComponent
 
 var controls_locked: bool = true
 var facing_dir: float
@@ -15,6 +17,7 @@ var facing_dir: float
 func _ready() -> void:
 	if RunManager.run_data == null:
 		RunManager.start_new_run()
+	_ensure_progression_components()
 	initialize_from_run_data()
 	
 	if RunManager.run_data != null:
@@ -31,22 +34,58 @@ func _on_attack_finished() -> void:
 	controls_locked = false
 
 func initialize_from_run_data() -> void:
+	# Get run data from RunManager
 	if RunManager.run_data == null:
 		return
+
 	var rd = RunManager.run_data
-	
-	# Movement Speed
-	if movement_component:
-		movement_component.speed = movement_component.speed * rd.stats["move_speed"]
-	
-	# Jump Strength
-	if jump_component:
-		jump_component.jump_velocity = jump_component.jump_velocity * rd.stats["jump_power"]
-	
-	# Health
+
+	# --- Apply stat upgrades from the run ---
+	if movement_component and rd.stats.has("move_speed"):
+		movement_component.speed *= rd.stats["move_speed"]
+
+	if jump_component and rd.stats.has("jump_strength"):
+		jump_component.jump_velocity *= rd.stats["jump_strength"]
+
+	# --- Health initialization ---
 	if has_node("HealthComponent"):
-		var hc = $HealthComponent
-		hc.initialize_from_stats(rd.stats["max_health"])
+		var hc: HealthComponent = $HealthComponent
+		if rd.stats.has("max_health"):
+			hc.initialize_from_stats(rd.stats["max_health"])
+
+	# --- Progression resources (EXP + Special) ---
+	var resources: Dictionary = {}
+
+	if rd.resources != null:
+		resources = rd.resources
+
+	if experience_component:
+		experience_component.initialize_from_run_data(resources)
+
+	if special_meter_component:
+		special_meter_component.initialize_from_run_data(resources)
+
+func _ensure_progression_components() -> void:
+	# Adds components at runtime so the HUD works without having to edit Player.tscn.
+	if experience_component == null:
+		var existing_xp = get_node_or_null("ExperienceComponent")
+		if existing_xp:
+			experience_component = existing_xp
+		else:
+			var xp_comp := ExperienceComponent.new()
+			xp_comp.name = "ExperienceComponent"
+			add_child(xp_comp)
+			experience_component = xp_comp
+	
+	if special_meter_component == null:
+		var existing_sm = get_node_or_null("SpecialMeterComponent")
+		if existing_sm:
+			special_meter_component = existing_sm
+		else:
+			var sm_comp := SpecialMeterComponent.new()
+			sm_comp.name = "SpecialMeterComponent"
+			add_child(sm_comp)
+			special_meter_component = sm_comp
 
 func _physics_process(delta: float) -> void:
 	var horizontal = 0 if controls_locked else input_component.input_horizontal

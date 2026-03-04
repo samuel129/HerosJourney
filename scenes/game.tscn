@@ -2,12 +2,13 @@
 
 [ext_resource type="Script" uid="uid://nw7qvld7b37h" path="res://scripts/game.gd" id="1_iywne"]
 [ext_resource type="PackedScene" uid="uid://bwmweutrm3ywa" path="res://scenes/player.tscn" id="1_uwrxv"]
+[ext_resource type="PackedScene" uid="uid://co3efmiby8xj3" path="res://scenes/hud.tscn" id="2_hud"]
 [ext_resource type="Script" uid="uid://pfrb7u05pro0" path="res://scripts/camera_2d.gd" id="2_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cwb41b3ncx4m1" path="res://scenes/components/gravity_component.tscn" id="3_lbhrr"]
 
-[node name="Game" type="Node2D" unique_id=1564412177 node_paths=PackedStringArray("level_container")]
+[node name="Game" type="Node2D" unique_id=1564412177]
+position = Vector2(0, -1)
 script = ExtResource("1_iywne")
-level_container = NodePath("LevelContainer")
 
 [node name="Player" parent="." unique_id=563289409 instance=ExtResource("1_uwrxv")]
 position = Vector2(278, 65)
@@ -37,8 +38,11 @@ follow_target = NodePath("../Player")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=264841395]
 z_index = -1
-offset_left = -668.0
-offset_top = -315.0
-offset_right = 920.0
-offset_bottom = 399.0
+offset_left = -406.0
+offset_top = -108.0
+offset_right = 1182.0
+offset_bottom = 606.0
 color = Color(0.66267854, 0.66267854, 0.66267854, 1)
+
+[node name="HUD" parent="." unique_id=1541716179 instance=ExtResource("2_hud")]
+bar_lerp_speed = null
