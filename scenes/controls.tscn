@@ -21,4 +21,19 @@ offset_bottom = 82.0
 texture_normal = ExtResource("3_cywyo")
 texture_hover = ExtResource("4_ihl6s")
 
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=76598259]
+offset_left = 129.0
+offset_top = 81.0
+offset_right = 188.0
+offset_bottom = 137.0
+theme_override_colors/default_color = Color(0.92941177, 0.9137255, 0.8627451, 1)
+theme_override_font_sizes/normal_font_size = 10
+text = "W - JUMP
+A - MOVE LEFT
+S - MOVE DOWN
+D - MOVE RIGHT
+LCLICK - ATTACK
+SHIFT - SPRINT
+"
+
 [connection signal="pressed" from="Exit" to="ControlBackground" method="_on_exit_pressed"]

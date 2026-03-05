@@ -6,7 +6,7 @@ extends CanvasLayer
 @onready var hp_label: Label = $Control/VBoxContainer/HPLabel
 @onready var special_label: Label = $Control/VBoxContainer/SpecialLabel
 @onready var exp_label: Label = $Control/VBoxContainer/ExpLabel
-@onready var crit_label: Label = $Control/VBoxContainer/CritLabel
+var crit_label: Label = null
 
 # Smooth animation targets
 var target_hp: float = 0.0
@@ -209,3 +209,7 @@ func _apply_upgrade(choice: int) -> void:
 			# Update HUD label
 			if crit_label:
 				crit_label.text = "CRIT %d%%" % int(current * 100)
+
+
+func _on_main_menu_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
