@@ -1,7 +1,8 @@
 extends Node
 
 var level_scenes := [
-	"res://scenes/levels/green_level.tscn"
+	"res://scenes/levels/green_level.tscn",
+	"res://scenes/levels/yellow_level.tscn"
 ]
 
 func pick_random_level() -> String:

@@ -19,13 +19,7 @@ var fall_look_offset_y: float = 0.0
 
 
 func _ready() -> void:
-	position_smoothing_enabled = false
-	look_offset = Vector2.ZERO
-	fall_look_offset_y = 0.0
-	if follow_target:
-		global_position = follow_target.global_position + base_offset
-	await get_tree().process_frame
-	position_smoothing_enabled = true
+	reset_camera()
 
 func _process(delta: float) -> void:
 	if follow_target == null:
@@ -46,3 +40,12 @@ func _process(delta: float) -> void:
 
 	# Final camera position
 	global_position = follow_target.global_position + Vector2(look_offset_x, current_offset_y)
+	
+func reset_camera() -> void:
+	position_smoothing_enabled = false
+	look_offset = Vector2.ZERO
+	fall_look_offset_y = 0.0
+	if follow_target:
+		global_position = follow_target.global_position + base_offset
+	await get_tree().process_frame
+	position_smoothing_enabled = true

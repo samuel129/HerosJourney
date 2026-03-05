@@ -211,6 +211,7 @@ func advance_to_next_stage() -> void:
 	load_level(next_path)
 	if player.has_method("respawn_at"):
 		player.call("respawn_at", player_spawn_position)
+	$Camera2D.reset_camera()
 	transitioning_stage = false
 
 func _clear_stage_portal() -> void:
