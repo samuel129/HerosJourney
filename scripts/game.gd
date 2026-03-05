@@ -99,7 +99,7 @@ func spawn_enemies(spawn: Vector2) -> void:
 	for marker in spawn_points:
 		if marker is Marker2D:
 			var enemy = enemy_scene.instantiate()
-			current_level.add_child(enemy)
+			current_level.call_deferred("add_child", enemy)
 			enemy.global_position = marker.global_position
 			active_enemies.append(enemy)
 
