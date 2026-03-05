@@ -26,7 +26,6 @@ theme_override_constants/separation = 2
 
 [node name="HPLabel" type="Label" parent="Control/VBoxContainer" unique_id=1937376419]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "HP"
 
 [node name="HPBar" type="ProgressBar" parent="Control/VBoxContainer" unique_id=1746420210]
@@ -36,7 +35,6 @@ show_percentage = false
 
 [node name="SpecialLabel" type="Label" parent="Control/VBoxContainer" unique_id=1389742113]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Special"
 
 [node name="SpecialBar" type="ProgressBar" parent="Control/VBoxContainer" unique_id=2038767035]
@@ -46,7 +44,6 @@ show_percentage = false
 
 [node name="ExpLabel" type="Label" parent="Control/VBoxContainer" unique_id=1821529184]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "EXP"
 
 [node name="ExpBar" type="ProgressBar" parent="Control/VBoxContainer" unique_id=1533678600]

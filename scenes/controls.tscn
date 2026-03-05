@@ -8,26 +8,17 @@
 [node name="Controls" type="Node2D" unique_id=1895149623]
 
 [node name="ControlBackground" type="Sprite2D" parent="." unique_id=1323416255]
-position = Vector2(155.99998, 88.99999)
-scale = Vector2(1.7, 1.7)
+position = Vector2(155.99998, 93)
+scale = Vector2(2.1166666, 1.7666668)
 texture = ExtResource("1_i2gav")
 script = ExtResource("2_5tddo")
 
-[node name="Exit" type="TextureButton" parent="." unique_id=1668999483]
-offset_left = 179.0
-offset_top = 62.0
-offset_right = 199.0
-offset_bottom = 82.0
-texture_normal = ExtResource("3_cywyo")
-texture_hover = ExtResource("4_ihl6s")
-
 [node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=76598259]
-offset_left = 129.0
-offset_top = 81.0
-offset_right = 188.0
-offset_bottom = 137.0
-theme_override_colors/default_color = Color(0.92941177, 0.9137255, 0.8627451, 1)
-theme_override_font_sizes/normal_font_size = 10
+offset_left = 114.0
+offset_top = 67.0
+offset_right = 210.0
+offset_bottom = 159.0
+theme_override_colors/default_color = Color(0.9529412, 0.8745098, 0.5882353, 1)
 text = "W - JUMP
 A - MOVE LEFT
 S - MOVE DOWN
@@ -35,5 +26,13 @@ D - MOVE RIGHT
 LCLICK - ATTACK
 SHIFT - SPRINT
 "
+
+[node name="Exit" type="TextureButton" parent="." unique_id=1668999483]
+offset_left = 190.0
+offset_top = 63.0
+offset_right = 210.0
+offset_bottom = 83.0
+texture_normal = ExtResource("3_cywyo")
+texture_hover = ExtResource("4_ihl6s")
 
 [connection signal="pressed" from="Exit" to="ControlBackground" method="_on_exit_pressed"]
