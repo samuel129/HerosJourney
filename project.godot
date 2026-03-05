@@ -30,6 +30,8 @@ window/stretch/mode="viewport"
 
 [gui]
 
+theme/default_font_multichannel_signed_distance_field=true
+theme/default_font_generate_mipmaps=true
 theme/custom_font="uid://nkxktoiqvu4x"
 
 [input]

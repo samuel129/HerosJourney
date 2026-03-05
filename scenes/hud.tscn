@@ -10,6 +10,10 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 4.0
+offset_right = -170.0
+offset_bottom = -76.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -49,3 +53,12 @@ text = "EXP"
 custom_minimum_size = Vector2(100, 4)
 layout_mode = 2
 show_percentage = false
+
+[node name="Main-Menu" type="Button" parent="." unique_id=1651639980]
+offset_left = 281.0
+offset_top = 4.0
+offset_right = 315.0
+offset_bottom = 26.0
+text = "Menu"
+
+[connection signal="pressed" from="Main-Menu" to="." method="_on_main_menu_pressed"]
