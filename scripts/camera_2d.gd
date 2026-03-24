@@ -17,7 +17,6 @@ var current_offset_y: float = 0.0
 var look_offset: Vector2 = Vector2.ZERO
 var fall_look_offset_y: float = 0.0
 
-
 func _ready() -> void:
 	reset_camera()
 

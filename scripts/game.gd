@@ -29,10 +29,9 @@ func _process(_delta):
 	if player.has_node("ExperienceComponent"):
 		var xp: ExperienceComponent = player.get_node("ExperienceComponent")
 		hud.set_exp(xp.experience, xp.exp_to_next)
-
 	_prune_active_enemies()
 	_try_spawn_stage_portal()
-	_try_manual_stage_advance()
+	_try_manual_stage_advance()	
 		
 func _ready():
 	if enemy_scene == null:
@@ -40,12 +39,56 @@ func _ready():
 	if portal_scene == null:
 		portal_scene = load("res://scenes/portal_anim.tscn")
 	_bind_player_signals()
-	var random_level = LevelLoader.pick_random_level()
-	current_level_index = LevelLoader.level_scenes.find(random_level)
-	if current_level_index < 0:
-		current_level_index = 0
-	load_level(random_level)
+	var generated_level = LevelLoader.generate_level()
+	#current_level_index = LevelLoader.level_scenes.find(random_level)
+	#if current_level_index < 0:
+		#current_level_index = 0
+	load_generated_level(generated_level)
 	_hook_hud_signals()
+
+func load_generated_level(level_node: Node2D):
+	if current_level:
+		current_level.queue_free()
+		current_level = null
+	clear_active_enemies()
+	_clear_stage_portal()
+	#transitioning_stage = false
+	# Add new generated level
+	level_container.add_child(level_node)
+	current_level = level_node
+	var spawn = level_node.find_child("PlayerSpawn", true, false)
+	if spawn:
+		player.global_position = spawn.global_position
+		player_spawn_position = spawn.global_position
+		if player is CharacterBody2D:
+			(player as CharacterBody2D).velocity = Vector2.ZERO
+		$Camera2D.global_position = player.global_position
+		$Camera2D.reset_smoothing()
+		$Camera2D.reset_camera()
+	await get_tree().process_frame
+	var start_chunk = current_level.get_child(0)
+	var marker = start_chunk.get_node("BottomLeft") as Marker2D
+	$Camera2D.limit_left = int(marker.global_position.x)
+	$Camera2D.limit_bottom = int(marker.global_position.y + 16)
+	if portal_scene:
+		var portal = portal_scene.instantiate()
+		current_level.add_child(portal)
+		portal.global_position = player.global_position + Vector2(-2, -24)
+	spawn_enemies_for_chunks()
+
+func spawn_enemies_for_chunks():
+	if enemy_scene == null or current_level == null:
+		return
+	for chunk in current_level.get_children():
+		var spawn_container := chunk.get_node_or_null("EnemySpawns")
+		if spawn_container == null:
+			continue
+		for marker in spawn_container.get_children():
+			if marker is Marker2D:
+				var enemy = enemy_scene.instantiate()
+				current_level.add_child(enemy)
+				enemy.global_position = marker.global_position
+				active_enemies.append(enemy)
 
 func load_level(level_path: String):
 	# Remove previous level
