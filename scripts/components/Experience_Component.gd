@@ -10,20 +10,17 @@ var level: int = 1
 var experience: int = 0
 var exp_to_next: int = 100
 
-# --- Compatibility (so your existing game.gd / HUD code works) ---
 var current_exp: int:
 	get: return experience
 
 var exp_to_next_level: int:
 	get: return exp_to_next
-# ---------------------------------------------------------------
 
 func _ready() -> void:
 	_recompute_threshold()
 	exp_changed.emit(experience, exp_to_next, level)
 
 func _recompute_threshold() -> void:
-	# Level 1->2: 100, 2->3: 200, 3->4: 300, ...
 	exp_to_next = max(base_exp_per_level * level, 1)
 
 func initialize_from_run_data(run_data: Dictionary = {}) -> void:
