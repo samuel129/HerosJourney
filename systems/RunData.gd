@@ -14,7 +14,7 @@ func _init() -> void:
 		
 		# Combat
 		"attack": 10,
-		"crit_chance": 0.05,
+		"crit_chance": .05,
 		"crit_damage": 1.5,
 		
 		# Movement

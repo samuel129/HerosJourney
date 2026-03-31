@@ -4,7 +4,6 @@ extends Node
 @export var combo_fast_hitbox_offset = Vector2(31, 0)
 @export var active_timer: Timer
 @export var cooldown_timer: Timer
-@export var attack_damage := 10
 @export var knockback_strength: float = 180.0
 @export var knockback_up: float = 40.0
 var can_attack = true
@@ -17,7 +16,6 @@ func _ready() -> void:
 
 func handle_hitbox_flip(direction: int, body_position: Vector2) -> void:
 	$AttackHitbox.global_position = (direction * combo_fast_hitbox_offset) + body_position
-	print(direction * combo_fast_hitbox_offset)
 
 func handle_attack(direction: int, body: CharacterBody2D) -> void:
 	can_attack = false
@@ -44,7 +42,7 @@ func _on_cooldown_timer_timeout():
 func _on_attack_hitbox_body_entered(target: Node2D) -> void:
 	if target.is_in_group("enemies") and target not in hit_targets:
 		if target.has_method("take_damage"):
-			target.take_damage(attack_damage)
+			target.take_damage(calculate_damage(RunManager.get_stat("attack")))
 		hit_targets.append(target)
 		if target is CharacterBody2D:
 			var enemy := target as CharacterBody2D
@@ -52,3 +50,14 @@ func _on_attack_hitbox_body_entered(target: Node2D) -> void:
 			if dir == 0:
 				dir = 1
 			enemy.apply_knockback(Vector2(dir * knockback_strength, -knockback_up))
+
+func calculate_damage(base_damage: float) -> float:
+	var crit_chance = RunManager.get_stat("crit_chance")
+	var crit_multiplier = RunManager.get_stat("crit_damage")
+	
+	var is_crit = randf() < crit_chance
+	
+	if is_crit:
+		return base_damage * crit_multiplier
+	
+	return base_damage
