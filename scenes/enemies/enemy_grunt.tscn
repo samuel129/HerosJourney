@@ -1,16 +1,25 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bu0aekqyrefq0"]
 
-[ext_resource type="Script" path="res://scripts/enemy_grunt.gd" id="1_u5q7v"]
+[ext_resource type="Script" uid="uid://c8hfmopuw1njf" path="res://scripts/enemy_grunt.gd" id="1_u5q7v"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d6g1j"]
 size = Vector2(16, 20)
 
-[node name="EnemyGrunt" type="CharacterBody2D"]
+[node name="EnemyGrunt" type="CharacterBody2D" unique_id=538752799]
+collision_layer = 2
 script = ExtResource("1_u5q7v")
 
-[node name="Body" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(-8, -10, 8, -10, 8, 10, -8, 10)
+[node name="Body" type="Polygon2D" parent="." unique_id=250767738]
 color = Color(0.55, 0.12, 0.12, 1)
+polygon = PackedVector2Array(-8, -10, 8, -10, 8, 10, -8, 10)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=748583158]
 shape = SubResource("RectangleShape2D_d6g1j")
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=678072033]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1112227062]
+shape = SubResource("RectangleShape2D_d6g1j")
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1531168933]

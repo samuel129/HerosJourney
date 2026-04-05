@@ -67,9 +67,12 @@ func load_generated_level(level_node: Node2D):
 		$Camera2D.reset_camera()
 	await get_tree().process_frame
 	var start_chunk = current_level.get_child(0)
-	var marker = start_chunk.get_node("BottomLeft") as Marker2D
-	$Camera2D.limit_left = int(marker.global_position.x)
-	$Camera2D.limit_bottom = int(marker.global_position.y + 16)
+	var BL_marker = start_chunk.get_node("BottomLeft") as Marker2D
+	$Camera2D.limit_left = int(BL_marker.global_position.x)
+	$Camera2D.limit_bottom = int(BL_marker.global_position.y + 16)
+	var TR_marker = current_level.find_child("TopRight", true, false) as Marker2D
+	$Camera2D.limit_right = int(TR_marker.global_position.x)
+	$Camera2D.limit_top = int(TR_marker.global_position.y - 16)
 	if portal_scene:
 		var portal = portal_scene.instantiate()
 		current_level.add_child(portal)

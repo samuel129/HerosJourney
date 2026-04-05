@@ -11,6 +11,8 @@ active_timer = NodePath("ActiveTimer")
 cooldown_timer = NodePath("CooldownTimer")
 
 [node name="AttackHitbox" type="Area2D" parent="." unique_id=2022568776]
+collision_layer = 2
+collision_mask = 2
 monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox" unique_id=1435660480]

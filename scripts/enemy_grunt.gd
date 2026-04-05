@@ -119,7 +119,9 @@ func _physics_process(delta: float) -> void:
 
 	facing = 1 if target_direction >= 0.0 else -1
 	$Body.scale.x = -1.0 if facing < 0 else 1.0
-	velocity.x = target_direction * move_speed
+	var target_speed = target_direction * move_speed
+	#velocity.x = move_toward(velocity.x, target_speed, 200 * delta)
+	velocity.x = target_speed
 	move_and_slide()
 
 func _start_attack() -> void:
@@ -243,3 +245,8 @@ func _get_default_gold_reward() -> int:
 		ThreatTier.BOSS:
 			return 100
 	return 5
+
+func _on_hitbox_entered(body):
+	if body.is_in_group("player"):
+		if body.has_method("receive_damage"):
+			body.receive_damage(attack_damage)
