@@ -3,14 +3,16 @@ extends Node
 var chunk_start: PackedScene = preload("res://scenes/level_chunks/chunk_start.tscn")
 var chunk_scenes: Array[PackedScene] = [
 	preload("res://scenes/level_chunks/chunk_01.tscn"),
-	preload("res://scenes/level_chunks/chunk_02.tscn")
+	preload("res://scenes/level_chunks/chunk_02.tscn"),
+	preload("res://scenes/level_chunks/chunk_03.tscn"),
+	preload("res://scenes/level_chunks/chunk_04.tscn")
 ]
 var chunk_end: PackedScene = preload("res://scenes/level_chunks/chunk_end.tscn")
 var chunk_count: int = 5
 
 # Theme Settings
 const ROW_HEIGHT := 2
-const NUM_THEMES := 5
+const NUM_THEMES := 7
 
 func generate_level(level_config: Dictionary = {}) -> Node2D:
 	var level_root = Node2D.new()

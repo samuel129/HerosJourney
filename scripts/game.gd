@@ -472,25 +472,9 @@ func _spawn_stage_portal() -> void:
 	stage_portal_root.add_child(trigger)
 
 func _get_stage_portal_position() -> Vector2:
-	var farthest: Vector2 = player_spawn_position
-	var max_distance: float = -1.0
-
-	if current_level:
-		for chunk in current_level.get_children():
-			var spawn_container: Node = chunk.get_node_or_null("EnemySpawns")
-			if spawn_container == null:
-				continue
-			for child in spawn_container.get_children():
-				if child is Marker2D:
-					var marker: Marker2D = child as Marker2D
-					var distance: float = marker.global_position.distance_squared_to(player_spawn_position)
-					if distance > max_distance:
-						max_distance = distance
-						farthest = marker.global_position
-
-	if max_distance >= 0.0:
-		return farthest + Vector2(0, -24)
-
+	if current_level == null: return player_spawn_position + Vector2(220, -24)
+	var portal_spawn := current_level.find_child("PortalSpawn", true, false) as Marker2D
+	if portal_spawn: return portal_spawn.global_position
 	return player_spawn_position + Vector2(220, -24)
 
 func _on_stage_portal_entered(body: Node) -> void:
