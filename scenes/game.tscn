@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://cwb41b3ncx4m1" path="res://scenes/components/gravity_component.tscn" id="3_lbhrr"]
 [ext_resource type="AudioStream" uid="uid://dijqac76oi88a" path="res://assets/audio/Swordattack.ogg" id="4_0tnpc"]
 [ext_resource type="AudioStream" uid="uid://dxwfo55rhl4gq" path="res://assets/audio/Background Music.ogg" id="6_p57ef"]
+[ext_resource type="PackedScene" path="res://scenes/world_map_ui.tscn" id="7_wmap"]
+[ext_resource type="PackedScene" path="res://scenes/vendor_ui.tscn" id="8_vendor"]
 
 [node name="Game" type="Node2D" unique_id=1564412177]
 position = Vector2(0, -1)
@@ -50,6 +52,10 @@ follow_target = NodePath("../Player")
 
 [node name="HUD" parent="." unique_id=1541716179 instance=ExtResource("2_hud")]
 bar_lerp_speed = null
+
+[node name="VendorUI" parent="." instance=ExtResource("8_vendor")]
+
+[node name="WorldMapUI" parent="." instance=ExtResource("7_wmap")]
 
 [node name="Background Music" type="AudioStreamPlayer" parent="." unique_id=77114163]
 stream = ExtResource("6_p57ef")

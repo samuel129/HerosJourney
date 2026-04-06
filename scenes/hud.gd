@@ -212,4 +212,7 @@ func _apply_upgrade(choice: int) -> void:
 
 
 func _on_main_menu_pressed() -> void:
+	get_tree().paused = false
+	if RunManager.is_run_active:
+		RunManager.end_run()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

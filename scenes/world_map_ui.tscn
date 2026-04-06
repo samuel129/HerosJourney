@@ -1,0 +1,99 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/world_map_ui.gd" id="1_wmap"]
+
+[node name="WorldMapUI" type="CanvasLayer"]
+layer = 5
+texture_filter = 1
+visible = false
+script = ExtResource("1_wmap")
+
+[node name="MapRoot" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_filter = 1
+
+[node name="Dim" type="ColorRect" parent="MapRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.62)
+
+[node name="Panel" type="PanelContainer" parent="MapRoot"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -68.0
+offset_right = 160.0
+offset_bottom = 68.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Margin" type="MarginContainer" parent="MapRoot/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="VBox" type="VBoxContainer" parent="MapRoot/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="MapRoot/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+horizontal_alignment = 1
+text = "World Map"
+
+[node name="SubTitle" type="Label" parent="MapRoot/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1
+text = "Choose your route"
+
+[node name="MapField" type="Control" parent="MapRoot/Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+size_flags_horizontal = 3
+clip_contents = true
+
+[node name="FieldBg" type="ColorRect" parent="MapRoot/Panel/Margin/VBox/MapField"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.14, 0.17, 0.18, 0.45)
+
+[node name="Nodes" type="Control" parent="MapRoot/Panel/Margin/VBox/MapField"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Detail" type="Label" parent="MapRoot/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1
+text = ""
+
+[node name="Hint" type="Label" parent="MapRoot/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1
+text = "Arrow Keys to move, Enter to confirm"

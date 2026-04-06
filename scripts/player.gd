@@ -67,8 +67,8 @@ func initialize_from_run_data() -> void:
 	if movement_component and rd.stats.has("move_speed"):
 		movement_component.speed *= rd.stats["move_speed"]
 
-	if jump_component and rd.stats.has("jump_strength"):
-		jump_component.jump_velocity *= rd.stats["jump_strength"]
+	if jump_component and rd.stats.has("jump_power"):
+		jump_component.jump_velocity *= rd.stats["jump_power"]
 
 	# --- Health initialization ---
 	if has_node("HealthComponent"):

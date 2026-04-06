@@ -18,6 +18,16 @@ enum ThreatTier {
 @export var attack_vertical_range: float = 24.0
 @export var attack_windup: float = 0.22
 @export var attack_cooldown_time: float = 0.9
+@export var enable_ranged_attack: bool = false
+@export var ranged_projectile_scene: PackedScene
+@export var ranged_attack_range: float = 210.0
+@export var ranged_attack_min_range: float = 36.0
+@export var ranged_attack_vertical_range: float = 60.0
+@export var ranged_windup: float = 0.32
+@export var ranged_cooldown_time: float = 1.6
+@export_range(0.0, 1.0, 0.01) var ranged_point_blank_chance: float = 0.2
+@export var projectile_speed: float = 170.0
+@export var projectile_damage: int = 10
 
 # Rewards
 @export var xp_reward: int = -1
@@ -31,14 +41,19 @@ var health_bar: ProgressBar
 var attack_cooldown: float = 0.0
 var attack_windup_timer: float = 0.0
 var attack_queued: bool = false
+var ranged_cooldown: float = 0.0
+var ranged_windup_timer: float = 0.0
+var ranged_attack_queued: bool = false
 var target_player: Node2D = null
 var knockback_timer: float = 0.0
+var base_body_color: Color = Color(0.55, 0.12, 0.12, 1.0)
 
 var health_component: HealthComponent
 
 func _ready() -> void:
 	add_to_group("enemies")
 	spawn_position = global_position
+	_cache_base_body_color()
 
 	if xp_reward < 0:
 		xp_reward = _get_default_xp_reward()
@@ -75,6 +90,8 @@ func _ensure_health_component() -> void:
 func _physics_process(delta: float) -> void:
 	attack_cooldown = maxf(0.0, attack_cooldown - delta)
 	attack_windup_timer = maxf(0.0, attack_windup_timer - delta)
+	ranged_cooldown = maxf(0.0, ranged_cooldown - delta)
+	ranged_windup_timer = maxf(0.0, ranged_windup_timer - delta)
 	knockback_timer = maxf(0.0, knockback_timer - delta)
 
 	if not is_on_floor():
@@ -96,15 +113,32 @@ func _physics_process(delta: float) -> void:
 			_perform_attack()
 		move_and_slide()
 		return
+	if ranged_attack_queued:
+		velocity.x = 0.0
+		if ranged_windup_timer <= 0.0:
+			_perform_ranged_attack()
+		move_and_slide()
+		return
 
 	if player != null:
 		var dx: float = player.global_position.x - global_position.x
 		var dy: float = player.global_position.y - global_position.y
+		var can_melee: bool = absf(dx) <= attack_range and absf(dy) <= attack_vertical_range and attack_cooldown <= 0.0
 
-		if absf(dx) <= attack_range and absf(dy) <= attack_vertical_range and attack_cooldown <= 0.0:
+		if can_melee:
 			facing = 1 if dx >= 0.0 else -1
 			$Body.scale.x = -1.0 if facing < 0 else 1.0
-			_start_attack()
+			if _should_use_ranged_in_melee():
+				_start_ranged_attack()
+			else:
+				_start_attack()
+			move_and_slide()
+			return
+
+		if _can_use_ranged_attack(dx, dy):
+			facing = 1 if dx >= 0.0 else -1
+			$Body.scale.x = -1.0 if facing < 0 else 1.0
+			_start_ranged_attack()
 			move_and_slide()
 			return
 
@@ -127,12 +161,12 @@ func _physics_process(delta: float) -> void:
 func _start_attack() -> void:
 	attack_queued = true
 	attack_windup_timer = attack_windup
-	$Body.color = Color(0.92, 0.25, 0.25, 1.0)
+	_set_body_color(Color(0.92, 0.25, 0.25, 1.0))
 
 func _perform_attack() -> void:
 	attack_queued = false
 	attack_cooldown = attack_cooldown_time
-	$Body.color = Color(0.55, 0.12, 0.12, 1.0)
+	_set_body_color(base_body_color)
 
 	if target_player == null or not is_instance_valid(target_player):
 		return
@@ -151,6 +185,73 @@ func _perform_attack() -> void:
 	var player_health := target_player.get_node_or_null("HealthComponent") as HealthComponent
 	if player_health and player_health.has_method("take_damage"):
 		player_health.take_damage(attack_damage)
+
+func _start_ranged_attack() -> void:
+	ranged_attack_queued = true
+	ranged_windup_timer = ranged_windup
+	_set_body_color(Color(1.0, 0.55, 0.28, 1.0))
+
+func _perform_ranged_attack() -> void:
+	ranged_attack_queued = false
+	ranged_cooldown = ranged_cooldown_time
+	_set_body_color(base_body_color)
+
+	if ranged_projectile_scene == null:
+		return
+
+	var parent_node: Node = get_parent()
+	if parent_node == null:
+		return
+
+	var spawn_position_local: Vector2 = global_position + Vector2(float(facing) * 14.0, -6.0)
+	var direction_to_target: Vector2 = Vector2(float(facing), 0.0)
+	if target_player and is_instance_valid(target_player):
+		var candidate_direction: Vector2 = target_player.global_position - spawn_position_local
+		if candidate_direction.length_squared() > 0.0001:
+			direction_to_target = candidate_direction.normalized()
+
+	var projectile: Node = ranged_projectile_scene.instantiate()
+	parent_node.add_child(projectile)
+	if projectile is Node2D:
+		(projectile as Node2D).global_position = spawn_position_local
+
+	if projectile.has_method("launch"):
+		projectile.call("launch", direction_to_target, projectile_speed, projectile_damage, self)
+
+func _can_use_ranged_attack(dx: float, dy: float) -> bool:
+	if not enable_ranged_attack:
+		return false
+	if ranged_projectile_scene == null:
+		return false
+	if ranged_cooldown > 0.0:
+		return false
+	var horizontal_distance: float = absf(dx)
+	if horizontal_distance < ranged_attack_min_range:
+		return false
+	if horizontal_distance > ranged_attack_range:
+		return false
+	if absf(dy) > ranged_attack_vertical_range:
+		return false
+	return true
+
+func _should_use_ranged_in_melee() -> bool:
+	if not enable_ranged_attack:
+		return false
+	if ranged_projectile_scene == null:
+		return false
+	if ranged_cooldown > 0.0:
+		return false
+	return randf() < ranged_point_blank_chance
+
+func _cache_base_body_color() -> void:
+	var body_node: Node = get_node_or_null("Body")
+	if body_node is Polygon2D:
+		base_body_color = (body_node as Polygon2D).color
+
+func _set_body_color(color: Color) -> void:
+	var body_node: Node = get_node_or_null("Body")
+	if body_node is Polygon2D:
+		(body_node as Polygon2D).color = color
 
 func _get_patrol_direction() -> float:
 	var left_limit: float = spawn_position.x - patrol_distance

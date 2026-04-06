@@ -12,10 +12,21 @@ var chunk_count: int = 5
 const ROW_HEIGHT := 2
 const NUM_THEMES := 5
 
-func generate_level() -> Node2D:
+func generate_level(level_config: Dictionary = {}) -> Node2D:
 	var level_root = Node2D.new()
 	level_root.name = "GeneratedLevel"
-	var theme_row = randi() % NUM_THEMES
+	var total_chunks := int(level_config.get("chunk_count", chunk_count))
+	total_chunks = clampi(total_chunks, 1, 12)
+
+	var theme_row := int(level_config.get("theme_row", -1))
+	if theme_row < 0:
+		theme_row = randi() % NUM_THEMES
+	theme_row = clampi(theme_row, 0, NUM_THEMES - 1)
+
+	level_root.set_meta("level_config", level_config.duplicate(true))
+	level_root.set_meta("chunk_count", total_chunks)
+	level_root.set_meta("theme_row", theme_row)
+
 	var previous_chunk: Node2D = null
 	var start = chunk_start.instantiate()
 	level_root.add_child(start)
@@ -23,7 +34,7 @@ func generate_level() -> Node2D:
 	_apply_theme_to_chunk(start, theme_row)
 	previous_chunk = start
 	# Generate Chain (Normal Chunks)
-	for i in range(chunk_count):
+	for i in range(total_chunks):
 		var chunk_scene = chunk_scenes.pick_random()
 		var new_chunk = chunk_scene.instantiate()
 		level_root.add_child(new_chunk)

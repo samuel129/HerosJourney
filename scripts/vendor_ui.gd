@@ -1,0 +1,279 @@
+extends CanvasLayer
+class_name VendorUI
+
+signal vendor_closed
+
+@onready var stage_label: Label = $Root/Panel/Margin/VBox/Title
+@onready var gold_label: Label = $Root/Panel/Margin/VBox/Gold
+@onready var offers_row: HBoxContainer = $Root/Panel/Margin/VBox/Offers
+@onready var status_label: Label = $Root/Panel/Margin/VBox/Status
+@onready var continue_button: Button = $Root/Panel/Margin/VBox/Actions/Continue
+
+const OFFER_POOL: Array[Dictionary] = [
+	{
+		"id": "offer_heal",
+		"title": "Field Rations",
+		"description": "Heal 35% max HP.",
+		"cost": 22,
+	},
+	{
+		"id": "offer_attack",
+		"title": "Sharpening Stone",
+		"description": "+3 Attack this run.",
+		"cost": 30,
+	},
+	{
+		"id": "offer_max_health",
+		"title": "Vital Charm",
+		"description": "+12 Max HP and heal 12.",
+		"cost": 34,
+	},
+	{
+		"id": "offer_crit",
+		"title": "Lucky Charm",
+		"description": "+3% Crit Chance.",
+		"cost": 28,
+	},
+	{
+		"id": "offer_crit_damage",
+		"title": "Keen Edge",
+		"description": "+20% Crit Damage.",
+		"cost": 36,
+	},
+	{
+		"id": "offer_move_speed",
+		"title": "Fleet Boots",
+		"description": "+8% Move Speed.",
+		"cost": 26,
+	},
+	{
+		"id": "offer_jump_power",
+		"title": "Sky Sigil",
+		"description": "+8% Jump Power.",
+		"cost": 25,
+	},
+	{
+		"id": "offer_full_heal",
+		"title": "Blessed Flask",
+		"description": "Restore to full HP.",
+		"cost": 32,
+	},
+	{
+		"id": "offer_armor",
+		"title": "Rune Plating",
+		"description": "+2 Defense.",
+		"cost": 27,
+	},
+	{
+		"id": "offer_attack_big",
+		"title": "War Banner",
+		"description": "+5 Attack this run.",
+		"cost": 48,
+	},
+	{
+		"id": "offer_crit_big",
+		"title": "Hunter's Oath",
+		"description": "+6% Crit Chance.",
+		"cost": 42,
+	},
+	{
+		"id": "offer_discount_heal",
+		"title": "Camp Rest",
+		"description": "Heal 20% HP for cheap.",
+		"cost": 12,
+	},
+]
+const OFFERS_PER_SHOP: int = 3
+
+var _offers: Array[Dictionary] = []
+var _offer_buttons: Array[Button] = []
+var _is_open: bool = false
+var _current_stage: int = 1
+var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	visible = false
+	_rng.randomize()
+	if not continue_button.pressed.is_connected(_on_continue_pressed):
+		continue_button.pressed.connect(_on_continue_pressed)
+
+func open_vendor(stage: int) -> void:
+	_current_stage = max(stage, 1)
+	_seed_vendor_rng(_current_stage)
+	_offers = _build_offers_for_stage(_current_stage)
+	_rebuild_offer_buttons()
+	_refresh_header()
+	status_label.text = "Spend gold now, or continue to the map."
+	visible = true
+	_is_open = true
+	get_tree().paused = true
+	if not _offer_buttons.is_empty():
+		_offer_buttons[0].grab_focus()
+	else:
+		continue_button.grab_focus()
+
+func close_vendor() -> void:
+	_is_open = false
+	visible = false
+	get_tree().paused = false
+	emit_signal("vendor_closed")
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not _is_open:
+		return
+	if event.is_action_pressed("ui_cancel"):
+		close_vendor()
+		get_viewport().set_input_as_handled()
+
+func _on_continue_pressed() -> void:
+	close_vendor()
+
+func _build_offers_for_stage(stage: int) -> Array[Dictionary]:
+	var offers: Array[Dictionary] = []
+	var available_indices: Array[int] = []
+	for i in range(OFFER_POOL.size()):
+		available_indices.append(i)
+
+	var offer_count: int = mini(OFFERS_PER_SHOP, available_indices.size())
+	for _slot in range(offer_count):
+		var random_pool_index: int = _rng.randi_range(0, available_indices.size() - 1)
+		var source_index: int = available_indices[random_pool_index]
+		available_indices.remove_at(random_pool_index)
+		var source_offer: Dictionary = OFFER_POOL[source_index]
+		var offer: Dictionary = source_offer.duplicate(true)
+		var stage_markup: int = int(floor(float(max(stage - 1, 0)) * 2.5))
+		offer["cost"] = int(source_offer.get("cost", 0)) + stage_markup
+		offer["purchased"] = false
+		offers.append(offer)
+	return offers
+
+func _rebuild_offer_buttons() -> void:
+	for child in offers_row.get_children():
+		child.queue_free()
+	_offer_buttons.clear()
+
+	for idx in range(_offers.size()):
+		var offer: Dictionary = _offers[idx]
+		var button: Button = Button.new()
+		button.custom_minimum_size = Vector2(96, 72)
+		button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		button.focus_mode = Control.FOCUS_ALL
+		button.add_theme_font_size_override("font_size", 8)
+		button.text = _format_offer_text(offer)
+		button.pressed.connect(_on_offer_pressed.bind(idx))
+		offers_row.add_child(button)
+		_offer_buttons.append(button)
+
+	_refresh_offer_button_states()
+
+func _on_offer_pressed(index: int) -> void:
+	_try_purchase_offer(index)
+
+func _try_purchase_offer(index: int) -> void:
+	if index < 0 or index >= _offers.size():
+		return
+	if RunManager.run_data == null:
+		status_label.text = "No active run data."
+		return
+
+	var offer: Dictionary = _offers[index]
+	if bool(offer.get("purchased", false)):
+		status_label.text = "Already purchased."
+		return
+
+	var cost: int = int(offer.get("cost", 0))
+	var current_gold: int = int(RunManager.run_data.resources.get("gold", 0))
+	if current_gold < cost:
+		status_label.text = "Not enough gold."
+		return
+
+	RunManager.run_data.resources["gold"] = current_gold - cost
+	_apply_offer_effect(offer)
+
+	offer["purchased"] = true
+	_offers[index] = offer
+	status_label.text = "%s purchased." % String(offer.get("title", "Offer"))
+	_refresh_header()
+	_refresh_offer_button_states()
+
+func _apply_offer_effect(offer: Dictionary) -> void:
+	if RunManager.run_data == null:
+		return
+
+	var offer_id: String = String(offer.get("id", ""))
+	var stats: Dictionary = RunManager.run_data.stats
+
+	match offer_id:
+		"offer_heal":
+			var max_health: int = int(stats.get("max_health", 100))
+			var current_health: int = int(stats.get("health", max_health))
+			var heal_amount: int = int(round(float(max_health) * 0.35))
+			stats["health"] = min(max_health, current_health + heal_amount)
+		"offer_discount_heal":
+			var max_health_discount: int = int(stats.get("max_health", 100))
+			var current_health_discount: int = int(stats.get("health", max_health_discount))
+			var heal_amount_discount: int = int(round(float(max_health_discount) * 0.20))
+			stats["health"] = min(max_health_discount, current_health_discount + heal_amount_discount)
+		"offer_full_heal":
+			var max_health_full: int = int(stats.get("max_health", 100))
+			stats["health"] = max_health_full
+		"offer_attack":
+			stats["attack"] = float(stats.get("attack", 10.0)) + 3.0
+		"offer_attack_big":
+			stats["attack"] = float(stats.get("attack", 10.0)) + 5.0
+		"offer_max_health":
+			var boosted_max: int = int(stats.get("max_health", 100)) + 12
+			var boosted_health: int = int(stats.get("health", boosted_max)) + 12
+			stats["max_health"] = boosted_max
+			stats["health"] = min(boosted_max, boosted_health)
+		"offer_crit":
+			var crit: float = float(stats.get("crit_chance", 0.05))
+			stats["crit_chance"] = min(crit + 0.03, 1.0)
+		"offer_crit_big":
+			var crit_big: float = float(stats.get("crit_chance", 0.05))
+			stats["crit_chance"] = min(crit_big + 0.06, 1.0)
+		"offer_crit_damage":
+			var crit_damage: float = float(stats.get("crit_damage", 1.5))
+			stats["crit_damage"] = crit_damage + 0.20
+		"offer_move_speed":
+			var move_speed: float = float(stats.get("move_speed", 1.0))
+			stats["move_speed"] = move_speed + 0.08
+		"offer_jump_power":
+			var jump_power: float = float(stats.get("jump_power", 1.0))
+			stats["jump_power"] = jump_power + 0.08
+		"offer_armor":
+			var defense: float = float(stats.get("defense", 0.0))
+			stats["defense"] = defense + 2.0
+
+func _seed_vendor_rng(stage: int) -> void:
+	if RunManager.run_data == null:
+		_rng.randomize()
+		return
+	var seed_value: int = int(RunManager.run_data.run_seed) + stage * 973 + RunManager.run_data.cleared_stages * 197
+	_rng.seed = seed_value
+
+func _refresh_header() -> void:
+	stage_label.text = "Wandering Vendor - Stage %d Clear" % _current_stage
+	var gold: int = 0
+	if RunManager.run_data != null:
+		gold = int(RunManager.run_data.resources.get("gold", 0))
+	gold_label.text = "Gold: %d" % gold
+
+func _refresh_offer_button_states() -> void:
+	for idx in range(_offer_buttons.size()):
+		var offer: Dictionary = _offers[idx]
+		var button: Button = _offer_buttons[idx]
+		var purchased: bool = bool(offer.get("purchased", false))
+		if purchased:
+			button.disabled = true
+			button.modulate = Color(0.55, 0.75, 0.55, 1.0)
+		else:
+			button.disabled = false
+			button.modulate = Color(1.0, 1.0, 1.0, 1.0)
+
+func _format_offer_text(offer: Dictionary) -> String:
+	var title: String = String(offer.get("title", "Offer"))
+	var description: String = String(offer.get("description", ""))
+	var cost: int = int(offer.get("cost", 0))
+	return "%s\n%s\n%d Gold" % [title, description, cost]

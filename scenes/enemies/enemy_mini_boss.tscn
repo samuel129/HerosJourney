@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://c8hfmopuw1njf" path="res://scripts/enemy_grunt.gd" id="1_mini"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy_projectile.tscn" id="2_proj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(24, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(28, 32)
+
+[node name="EnemyMiniBoss" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_mini")
+threat_tier = 1
+move_speed = 52.0
+gravity = 900.0
+chase_range = 190.0
+patrol_distance = 72.0
+max_health = 120
+attack_damage = 18
+attack_range = 28.0
+attack_vertical_range = 30.0
+attack_windup = 0.18
+attack_cooldown_time = 0.8
+enable_ranged_attack = true
+ranged_projectile_scene = ExtResource("2_proj")
+ranged_attack_range = 230.0
+ranged_attack_min_range = 44.0
+ranged_attack_vertical_range = 72.0
+ranged_windup = 0.34
+ranged_cooldown_time = 1.45
+ranged_point_blank_chance = 0.18
+projectile_speed = 185.0
+projectile_damage = 12
+xp_reward = 150
+gold_reward = 45
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.32, 0.11, 0.11, 1)
+polygon = PackedVector2Array(-12, -15, 12, -15, 12, 15, -12, 15)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="Hurtbox" type="Area2D" parent="."]

@@ -5,6 +5,10 @@ var resources: Dictionary
 var perks: Array
 var inventory: Array
 var flags: Dictionary
+var stage: int
+var cleared_stages: int
+var map_history: Array
+var run_seed: int
 
 func _init() -> void:
 	stats = {
@@ -42,3 +46,7 @@ func _init() -> void:
 	inventory = []
 	# Run-specific events that impact rest of run
 	flags = {}
+	stage = 1
+	cleared_stages = 0
+	map_history = []
+	run_seed = 0

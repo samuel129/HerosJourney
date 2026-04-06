@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_grunt.gd" id="1_enemy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(22, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(24, 28)
+
+[node name="EnemyBrute" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_enemy")
+move_speed = 34.0
+chase_range = 150.0
+patrol_distance = 66.0
+max_health = 52
+attack_damage = 14
+attack_range = 28.0
+attack_vertical_range = 30.0
+attack_windup = 0.28
+attack_cooldown_time = 1.22
+xp_reward = 44
+gold_reward = 11
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.42, 0.2, 0.08, 1)
+polygon = PackedVector2Array(-11, -13, 11, -13, 11, 13, -11, 13)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="Hurtbox" type="Area2D" parent="."]
