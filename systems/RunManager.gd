@@ -3,6 +3,38 @@ extends Node
 var run_data: RunData = null
 var is_run_active: bool = false
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var meta_currency: int = 0
+var permanent_upgrades: Dictionary = {
+	"max_health": 0,
+	"crit_chance": 0,
+	"move_speed": 0,
+}
+
+const META_SAVE_PATH := "user://meta_progress.cfg"
+const RUN_SAVE_PATH := "user://active_run.dat"
+const PERMANENT_UPGRADE_DATA := {
+	"max_health": {
+		"name": "Max HP",
+		"base_cost": 25,
+		"cost_step": 15,
+		"value_step": 5.0,
+		"max_level": 8,
+	},
+	"crit_chance": {
+		"name": "Crit Chance",
+		"base_cost": 30,
+		"cost_step": 20,
+		"value_step": 0.01,
+		"max_level": 8,
+	},
+	"move_speed": {
+		"name": "Move Speed",
+		"base_cost": 24,
+		"cost_step": 16,
+		"value_step": 0.03,
+		"max_level": 8,
+	},
+}
 
 const DEFAULT_BRANCH_COUNT = 3
 const NODE_PROFILES = [
@@ -68,6 +100,7 @@ signal stage_advanced(new_stage: int)
 
 func _ready() -> void:
 	_rng.randomize()
+	_load_meta_progress()
 
 func start_new_run(seed: int = -1) -> void:
 	run_data = RunData.new()
@@ -80,6 +113,7 @@ func start_new_run(seed: int = -1) -> void:
 	_rng.seed = run_data.run_seed
 	run_data.stage = 1
 	run_data.cleared_stages = 0
+	_apply_permanent_upgrades_to_run()
 	run_data.stats["health"] = run_data.stats["max_health"]
 	run_data.flags["stage"] = run_data.stage
 	run_data.flags["stages_cleared"] = run_data.cleared_stages
@@ -91,9 +125,204 @@ func start_new_run(seed: int = -1) -> void:
 	emit_signal("run_started", run_data)
 
 func end_run() -> void:
+	if run_data != null:
+		var run_gold: int = int(run_data.resources.get("gold", 0))
+		# Convert run gold into persistent currency for permanent upgrades.
+		if run_gold > 0:
+			meta_currency += int(floor(float(run_gold) * 0.5))
+			_save_meta_progress()
+		delete_saved_run()
 	run_data = null
 	is_run_active = false
 	emit_signal("run_ended")
+
+func get_meta_currency() -> int:
+	return meta_currency
+
+func get_permanent_upgrade_level(upgrade_id: String) -> int:
+	if not permanent_upgrades.has(upgrade_id):
+		return 0
+	return int(permanent_upgrades[upgrade_id])
+
+# Returns the cost of the next lvl of specified upgrade, or -1 if upgrade maxed out
+func get_permanent_upgrade_cost(upgrade_id: String) -> int:
+	if not PERMANENT_UPGRADE_DATA.has(upgrade_id):
+		return -1
+	var data: Dictionary = PERMANENT_UPGRADE_DATA[upgrade_id]
+	var level: int = get_permanent_upgrade_level(upgrade_id)
+	var max_level: int = int(data.get("max_level", 1))
+	if level >= max_level:
+		return -1
+	return int(data.get("base_cost", 0)) + int(data.get("cost_step", 0)) * level
+
+# Returns true if the specified upgrade can be purchased with current meta currency, false if not (either due to cost or already maxed out)
+func can_purchase_permanent_upgrade(upgrade_id: String) -> bool:
+	var cost: int = get_permanent_upgrade_cost(upgrade_id)
+	if cost < 0:
+		return false
+	return meta_currency >= cost
+
+# Attempts to purchase a specific upgrade. True if successful, false if not
+func purchase_permanent_upgrade(upgrade_id: String) -> bool:
+	if not can_purchase_permanent_upgrade(upgrade_id):
+		return false
+	var cost: int = get_permanent_upgrade_cost(upgrade_id)
+	meta_currency -= cost
+	permanent_upgrades[upgrade_id] = get_permanent_upgrade_level(upgrade_id) + 1
+	_save_meta_progress()
+	return true
+
+# Returns an array of dictionaries containing info about each permanent upgrade for UI display
+func get_permanent_upgrade_catalog() -> Array:
+	var entries: Array = []
+	for upgrade_id in PERMANENT_UPGRADE_DATA.keys():
+		var data: Dictionary = PERMANENT_UPGRADE_DATA[upgrade_id]
+		var level: int = get_permanent_upgrade_level(upgrade_id)
+		var value_step: float = float(data.get("value_step", 0.0))
+		entries.append({
+			"id": upgrade_id,
+			"name": String(data.get("name", upgrade_id)),
+			"level": level,
+			"max_level": int(data.get("max_level", 1)),
+			"cost": get_permanent_upgrade_cost(upgrade_id),
+			"total_bonus": value_step * level,
+		})
+	return entries
+
+# Applies the effects of all purchased permanent upgrades to the current run's stats. Called at the start of each run
+func _apply_permanent_upgrades_to_run() -> void:
+	if run_data == null:
+		return
+	var stats: Dictionary = run_data.stats
+
+	var hp_level: int = get_permanent_upgrade_level("max_health")
+	if hp_level > 0:
+		var hp_bonus: int = int(hp_level * float(PERMANENT_UPGRADE_DATA["max_health"]["value_step"]))
+		stats["max_health"] = int(stats.get("max_health", 100)) + hp_bonus
+
+	var crit_level: int = get_permanent_upgrade_level("crit_chance")
+	if crit_level > 0:
+		var crit_bonus: float = float(crit_level) * float(PERMANENT_UPGRADE_DATA["crit_chance"]["value_step"])
+		stats["crit_chance"] = min(float(stats.get("crit_chance", 0.05)) + crit_bonus, 1.0)
+
+	var speed_level: int = get_permanent_upgrade_level("move_speed")
+	if speed_level > 0:
+		var speed_bonus: float = float(speed_level) * float(PERMANENT_UPGRADE_DATA["move_speed"]["value_step"])
+		stats["move_speed"] = float(stats.get("move_speed", 1.0)) + speed_bonus
+
+
+# Loads meta progress from disk. If no save file exists, starts with default values.
+func _load_meta_progress() -> void:
+	var cfg := ConfigFile.new()
+	var err := cfg.load(META_SAVE_PATH)
+	if err != OK:
+		return
+	meta_currency = int(cfg.get_value("progress", "meta_currency", 0))
+	for upgrade_id in permanent_upgrades.keys():
+		permanent_upgrades[upgrade_id] = int(cfg.get_value("upgrades", upgrade_id, 0))
+
+func _save_meta_progress() -> void:
+	var cfg := ConfigFile.new()
+	cfg.set_value("progress", "meta_currency", meta_currency)
+	for upgrade_id in permanent_upgrades.keys():
+		cfg.set_value("upgrades", upgrade_id, int(permanent_upgrades[upgrade_id]))
+	cfg.save(META_SAVE_PATH)
+
+func reset_all_saved_data() -> void:
+	meta_currency = 0
+	for upgrade_id in permanent_upgrades.keys():
+		permanent_upgrades[upgrade_id] = 0
+
+	if has_saved_run():
+		delete_saved_run()
+
+	if FileAccess.file_exists(META_SAVE_PATH):
+		DirAccess.remove_absolute(META_SAVE_PATH)
+
+	var had_active_run: bool = is_run_active
+	run_data = null
+	is_run_active = false
+	if had_active_run:
+		emit_signal("run_ended")
+
+func has_saved_run() -> bool:
+	return FileAccess.file_exists(RUN_SAVE_PATH)
+
+func save_current_run() -> bool:
+	if run_data == null:
+		return false
+	var file := FileAccess.open(RUN_SAVE_PATH, FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_var(_serialize_run_data(run_data), true)
+	return true
+
+func load_saved_run() -> bool:
+	if not has_saved_run():
+		return false
+	var file := FileAccess.open(RUN_SAVE_PATH, FileAccess.READ)
+	if file == null:
+		return false
+	var payload = file.get_var(true)
+	if typeof(payload) != TYPE_DICTIONARY:
+		return false
+	var loaded = _deserialize_run_data(payload as Dictionary)
+	if loaded == null:
+		return false
+	run_data = loaded
+	is_run_active = true
+	_rng.seed = int(run_data.run_seed)
+	emit_signal("run_started", run_data)
+	return true
+
+func delete_saved_run() -> void:
+	if has_saved_run():
+		DirAccess.remove_absolute(RUN_SAVE_PATH)
+
+func _serialize_run_data(data: RunData) -> Dictionary:
+	return {
+		"stats": data.stats.duplicate(true),
+		"resources": data.resources.duplicate(true),
+		"perks": data.perks.duplicate(true),
+		"inventory": data.inventory.duplicate(true),
+		"flags": data.flags.duplicate(true),
+		"stage": data.stage,
+		"cleared_stages": data.cleared_stages,
+		"map_history": data.map_history.duplicate(true),
+		"run_seed": data.run_seed,
+	}
+
+func _deserialize_run_data(payload: Dictionary):
+	var loaded := RunData.new()
+
+	if payload.has("stats") and typeof(payload["stats"]) == TYPE_DICTIONARY:
+		for key in (payload["stats"] as Dictionary).keys():
+			loaded.stats[key] = payload["stats"][key]
+
+	if payload.has("resources") and typeof(payload["resources"]) == TYPE_DICTIONARY:
+		for key in (payload["resources"] as Dictionary).keys():
+			loaded.resources[key] = payload["resources"][key]
+
+	if payload.has("perks") and typeof(payload["perks"]) == TYPE_ARRAY:
+		loaded.perks = (payload["perks"] as Array).duplicate(true)
+
+	if payload.has("inventory") and typeof(payload["inventory"]) == TYPE_ARRAY:
+		loaded.inventory = (payload["inventory"] as Array).duplicate(true)
+
+	if payload.has("flags") and typeof(payload["flags"]) == TYPE_DICTIONARY:
+		loaded.flags = (payload["flags"] as Dictionary).duplicate(true)
+
+	if payload.has("map_history") and typeof(payload["map_history"]) == TYPE_ARRAY:
+		loaded.map_history = (payload["map_history"] as Array).duplicate(true)
+
+	loaded.stage = int(payload.get("stage", loaded.stage))
+	loaded.cleared_stages = int(payload.get("cleared_stages", loaded.cleared_stages))
+	loaded.run_seed = int(payload.get("run_seed", loaded.run_seed))
+
+	loaded.flags["stage"] = loaded.stage
+	loaded.flags["stages_cleared"] = loaded.cleared_stages
+	loaded.flags["map_history"] = loaded.map_history.duplicate(true)
+	return loaded
 
 func get_stat(stat_name: String) -> float:
 	if run_data and run_data.stats.has(stat_name):
@@ -122,6 +351,7 @@ func mark_current_stage_cleared() -> void:
 	run_data.cleared_stages += 1
 	run_data.flags["stages_cleared"] = run_data.cleared_stages
 	run_data.resources["gold"] = int(run_data.resources.get("gold", 0)) + 5
+	save_current_run()
 
 func generate_world_map_choices(choice_count: int = DEFAULT_BRANCH_COUNT) -> Array:
 	if run_data == null:
@@ -181,6 +411,7 @@ func choose_world_map_node(choice_id: String) -> Dictionary:
 		run_data.flags["map_history"] = run_data.map_history.duplicate(true)
 
 		_apply_choice_rewards(choice)
+		save_current_run()
 		emit_signal("world_map_choice_selected", choice)
 		emit_signal("stage_advanced", run_data.stage)
 		return level_config
