@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://co3efmiby8xj3"]
 
 [ext_resource type="Script" uid="uid://b37tqjbpojg8q" path="res://scenes/hud.gd" id="1_ahhtf"]
+[ext_resource type="Theme" uid="uid://cjtgmcnr4asnk" path="res://assets/fonts/button.tres" id="2_oo0fn"]
 
 [node name="HUD" type="CanvasLayer" unique_id=193902336]
 script = ExtResource("1_ahhtf")
@@ -16,6 +17,7 @@ offset_right = -210.0
 offset_bottom = -104.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_oo0fn")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=2088378789]
 custom_minimum_size = Vector2(20, 20)
@@ -59,6 +61,7 @@ offset_left = 281.0
 offset_top = 4.0
 offset_right = 315.0
 offset_bottom = 26.0
+theme = ExtResource("2_oo0fn")
 theme_override_font_sizes/font_size = 8
 text = "Menu"
 
@@ -67,6 +70,7 @@ offset_left = 281.0
 offset_top = 30.0
 offset_right = 315.0
 offset_bottom = 52.0
+theme = ExtResource("2_oo0fn")
 theme_override_font_sizes/font_size = 8
 text = "Save"
 

@@ -1,29 +1,10 @@
 [gd_scene format=3 uid="uid://cfkbstyyj2vm3"]
 
 [ext_resource type="Script" uid="uid://b3p8pjmmvr5n6" path="res://scenes/components/main_menu.gd" id="1_gu2dv"]
+[ext_resource type="Theme" uid="uid://cjtgmcnr4asnk" path="res://assets/fonts/button.tres" id="2_bqqt6"]
 [ext_resource type="Texture2D" uid="uid://caj8nswd8qg2n" path="res://assets/art/ui/menubackground.png" id="3_fsq1i"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wu84c"]
-bg_color = Color(0.35686275, 0.28627452, 0.23921569, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bqqt6"]
-bg_color = Color(0.35686275, 0.28627452, 0.23921569, 1)
-border_width_bottom = 4
-border_color = Color(0.23137255, 0.1882353, 0.15686275, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-corner_detail = 15
-
 [sub_resource type="Theme" id="Theme_wu84c"]
-Button/colors/font_color = Color(0.9529412, 0.8745098, 0.5882353, 1)
-Button/styles/hover = SubResource("StyleBoxFlat_wu84c")
-Button/styles/normal = SubResource("StyleBoxFlat_bqqt6")
 
 [node name="MainMenu" type="Control" unique_id=1864574091]
 layout_mode = 3
@@ -52,13 +33,13 @@ offset_top = 7.0
 offset_right = -5.0
 offset_bottom = 24.0
 grow_horizontal = 0
-theme = SubResource("Theme_wu84c")
+theme = ExtResource("2_bqqt6")
 theme_override_font_sizes/font_size = 8
 text = "Restart Data"
 
 [node name="Button_Manager" type="Control" parent="Main Menu" unique_id=1110405899]
 layout_mode = 1
-anchor_left = 0.5
+anchor_left = 0.496875
 anchor_top = 0.5
 anchor_right = 0.496875
 anchor_bottom = 0.5
@@ -68,7 +49,7 @@ offset_right = 90.0
 offset_bottom = 70.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_wu84c")
+theme = ExtResource("2_bqqt6")
 metadata/_edit_use_anchors_ = true
 
 [node name="Menubackground" type="Sprite2D" parent="Main Menu/Button_Manager" unique_id=497224509]
@@ -82,6 +63,7 @@ offset_left = 24.0
 offset_top = 55.0
 offset_right = 156.0
 offset_bottom = 136.0
+theme = SubResource("Theme_wu84c")
 theme_override_constants/separation = 4
 
 [node name="Start" type="Button" parent="Main Menu/Button_Manager/Buttons" unique_id=1430061358]

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dfedc1dmw6sw8" path="res://scenes/components/select_game.gd" id="1_sel"]
 [ext_resource type="FontFile" uid="uid://nkxktoiqvu4x" path="res://assets/fonts/Pixelpurl-0vBPP.ttf" id="2_font"]
+[ext_resource type="Theme" uid="uid://cjtgmcnr4asnk" path="res://assets/fonts/button.tres" id="3_j7n06"]
 
 [sub_resource type="Theme" id="Theme_select"]
 Button/font_sizes/font_size = 16
@@ -69,6 +70,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBox" type="VBoxContainer" parent="Root/Panel/Margin" unique_id=1541845933]
 layout_mode = 2
+theme = ExtResource("3_j7n06")
 theme_override_constants/separation = 7
 
 [node name="Title" type="Label" parent="Root/Panel/Margin/VBox" unique_id=1183281020]

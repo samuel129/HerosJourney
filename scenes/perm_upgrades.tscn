@@ -1,13 +1,7 @@
 [gd_scene format=3 uid="uid://d221rshqm7ott"]
 
+[ext_resource type="Theme" uid="uid://cjtgmcnr4asnk" path="res://assets/fonts/button.tres" id="1_a1car"]
 [ext_resource type="Script" uid="uid://byswgy7g0saac" path="res://scenes/components/perm_upgrades.gd" id="1_perm"]
-[ext_resource type="FontFile" uid="uid://nkxktoiqvu4x" path="res://assets/fonts/Pixelpurl-0vBPP.ttf" id="2_font"]
-
-[sub_resource type="Theme" id="Theme_perm"]
-Button/font_sizes/font_size = 16
-Button/fonts/font = ExtResource("2_font")
-Label/font_sizes/font_size = 16
-Label/fonts/font = ExtResource("2_font")
 
 [sub_resource type="SystemFont" id="SystemFont_a1car"]
 
@@ -36,7 +30,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_perm")
+theme = ExtResource("1_a1car")
 script = ExtResource("1_perm")
 
 [node name="Root" type="Control" parent="." unique_id=1840477158]
