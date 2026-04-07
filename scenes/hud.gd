@@ -216,3 +216,7 @@ func _on_main_menu_pressed() -> void:
 	if RunManager.is_run_active:
 		RunManager.end_run()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+func _on_save_game_pressed() -> void:
+	RunManager.save_current_run()
+	
