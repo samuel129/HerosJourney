@@ -5,7 +5,7 @@ var chunk_scenes: Array[PackedScene] = [
 	preload("res://scenes/level_chunks/chunk_01.tscn"),
 	preload("res://scenes/level_chunks/chunk_02.tscn"),
 	preload("res://scenes/level_chunks/chunk_03.tscn"),
-	preload("res://scenes/level_chunks/chunk_04.tscn")
+	#preload("res://scenes/level_chunks/chunk_04.tscn") Temporarily disabled due to camera limits
 ]
 var chunk_end: PackedScene = preload("res://scenes/level_chunks/chunk_end.tscn")
 var chunk_count: int = 5
