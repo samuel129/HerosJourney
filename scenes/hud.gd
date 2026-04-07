@@ -38,6 +38,9 @@ func _ready() -> void:
 	if crit_label == null:
 		crit_label = Label.new()
 		crit_label.text = "CRIT 0%"
+		var font = load("res://assets/fonts/04B_03__.TTF")
+		crit_label.add_theme_font_override("font", font)
+		crit_label.add_theme_font_size_override("font_size", 8)
 		$Control/VBoxContainer.add_child(crit_label)
 
 func bind_player(p: Node) -> void:
@@ -107,35 +110,49 @@ func _build_levelup_popup() -> void:
 	add_child(levelup_panel)
 
 	# Center it
-	levelup_panel.set_anchors_preset(Control.PRESET_CENTER)
-	levelup_panel.offset_left = -220
-	levelup_panel.offset_right = 220
-	levelup_panel.offset_top = -120
-	levelup_panel.offset_bottom = 120
-
+	levelup_panel.anchor_left = 0.5
+	levelup_panel.anchor_right = 0.5
+	levelup_panel.anchor_top = 0.5
+	levelup_panel.anchor_bottom = 0.5
+	levelup_panel.offset_left = -200
+	levelup_panel.offset_right = 200
+	levelup_panel.offset_top = -40
+	levelup_panel.offset_bottom = 40
+	levelup_panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	levelup_panel.grow_vertical = Control.GROW_DIRECTION_BOTH
+	
 	var root_vbox := VBoxContainer.new()
 	root_vbox.add_theme_constant_override("separation", 10)
 	levelup_panel.add_child(root_vbox)
+	
+	var font = load("res://assets/fonts/04B_03__.TTF")
 
 	levelup_title = Label.new()
 	levelup_title.text = "LEVEL UP!"
 	levelup_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	levelup_title.add_theme_font_override("font", font)
+	levelup_title.add_theme_font_size_override("font_size", 8)
 	root_vbox.add_child(levelup_title)
 
 	levelup_desc = Label.new()
 	levelup_desc.text = "Choose one upgrade:"
 	levelup_desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	levelup_desc.add_theme_font_override("font", font)
+	levelup_desc.add_theme_font_size_override("font_size", 8)
 	root_vbox.add_child(levelup_desc)
 
 	var btn_row := HBoxContainer.new()
-	btn_row.add_theme_constant_override("separation", 10)
+	btn_row.add_theme_constant_override("separation", 4)
+	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	root_vbox.add_child(btn_row)
 
 	# 3 upgrade buttons
 	for i in range(3):
 		var b := Button.new()
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.custom_minimum_size = Vector2(80, 16)
 		b.text = "Upgrade %d" % (i + 1)
+		b.add_theme_font_override("font", font)
+		b.add_theme_font_size_override("font_size", 8)
 		btn_row.add_child(b)
 		levelup_buttons.append(b)
 
@@ -144,7 +161,7 @@ func _build_levelup_popup() -> void:
 		b.pressed.connect(func(): _on_upgrade_chosen(idx))
 
 	_refresh_upgrade_text()
-
+	
 func _refresh_upgrade_text() -> void:
 	levelup_buttons[0].text = "+10 Max HP"
 	levelup_buttons[1].text = "+10% Move Speed"

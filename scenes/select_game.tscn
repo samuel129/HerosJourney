@@ -1,15 +1,25 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dqb4kt5cwhsb0"]
 
-[ext_resource type="Script" path="res://scenes/components/select_game.gd" id="1_sel"]
+[ext_resource type="Script" uid="uid://dfedc1dmw6sw8" path="res://scenes/components/select_game.gd" id="1_sel"]
 [ext_resource type="FontFile" uid="uid://nkxktoiqvu4x" path="res://assets/fonts/Pixelpurl-0vBPP.ttf" id="2_font"]
 
 [sub_resource type="Theme" id="Theme_select"]
-Button/fonts/font = ExtResource("2_font")
 Button/font_sizes/font_size = 16
-Label/fonts/font = ExtResource("2_font")
+Button/fonts/font = ExtResource("2_font")
 Label/font_sizes/font_size = 16
+Label/fonts/font = ExtResource("2_font")
 
-[node name="SelectGame" type="Control"]
+[sub_resource type="SystemFont" id="SystemFont_16ke5"]
+
+[sub_resource type="FontVariation" id="FontVariation_j7n06"]
+
+[sub_resource type="SystemFont" id="SystemFont_kv0bg"]
+
+[sub_resource type="SystemFont" id="SystemFont_8eqfu"]
+
+[sub_resource type="SystemFont" id="SystemFont_huhxn"]
+
+[node name="SelectGame" type="Control" unique_id=949111637]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,15 +29,15 @@ grow_vertical = 2
 theme = SubResource("Theme_select")
 script = ExtResource("1_sel")
 
-[node name="Root" type="Control" parent="."]
-layout_mode = 3
+[node name="Root" type="Control" parent="." unique_id=541335297]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Dim" type="ColorRect" parent="Root"]
+[node name="Dim" type="ColorRect" parent="Root" unique_id=579918242]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,7 +46,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.55)
 
-[node name="Panel" type="PanelContainer" parent="Root"]
+[node name="Panel" type="PanelContainer" parent="Root" unique_id=1983797794]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -50,45 +60,50 @@ offset_bottom = 75.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Margin" type="MarginContainer" parent="Root/Panel"]
+[node name="Margin" type="MarginContainer" parent="Root/Panel" unique_id=693190785]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBox" type="VBoxContainer" parent="Root/Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Root/Panel/Margin" unique_id=1541845933]
 layout_mode = 2
 theme_override_constants/separation = 7
 
-[node name="Title" type="Label" parent="Root/Panel/Margin/VBox"]
+[node name="Title" type="Label" parent="Root/Panel/Margin/VBox" unique_id=1183281020]
 layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_16ke5")
 theme_override_font_sizes/font_size = 16
-horizontal_alignment = 1
 text = "Select Game"
-
-[node name="Status" type="Label" parent="Root/Panel/Margin/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
-text = "Checking save data..."
 
-[node name="NewGameButton" type="Button" parent="Root/Panel/Margin/VBox"]
+[node name="Status" type="Label" parent="Root/Panel/Margin/VBox" unique_id=1808458906]
+layout_mode = 2
+theme_override_fonts/font = SubResource("FontVariation_j7n06")
+theme_override_font_sizes/font_size = 8
+text = "Checking save data..."
+horizontal_alignment = 1
+
+[node name="NewGameButton" type="Button" parent="Root/Panel/Margin/VBox" unique_id=1183015308]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_fonts/font = SubResource("SystemFont_kv0bg")
 text = "New Game"
 
-[node name="LoadButton" type="Button" parent="Root/Panel/Margin/VBox"]
+[node name="LoadButton" type="Button" parent="Root/Panel/Margin/VBox" unique_id=309741024]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_fonts/font = SubResource("SystemFont_8eqfu")
 text = "Load Game"
 
-[node name="BackButton" type="Button" parent="Root/Panel/Margin/VBox"]
+[node name="BackButton" type="Button" parent="Root/Panel/Margin/VBox" unique_id=1146674726]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_fonts/font = SubResource("SystemFont_huhxn")
 text = "Back"
 
 [connection signal="pressed" from="Root/Panel/Margin/VBox/NewGameButton" to="." method="_on_new_game_pressed"]

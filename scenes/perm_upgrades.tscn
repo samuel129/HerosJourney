@@ -1,15 +1,35 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://d221rshqm7ott"]
 
-[ext_resource type="Script" path="res://scenes/components/perm_upgrades.gd" id="1_perm"]
+[ext_resource type="Script" uid="uid://byswgy7g0saac" path="res://scenes/components/perm_upgrades.gd" id="1_perm"]
 [ext_resource type="FontFile" uid="uid://nkxktoiqvu4x" path="res://assets/fonts/Pixelpurl-0vBPP.ttf" id="2_font"]
 
 [sub_resource type="Theme" id="Theme_perm"]
-Button/fonts/font = ExtResource("2_font")
 Button/font_sizes/font_size = 16
-Label/fonts/font = ExtResource("2_font")
+Button/fonts/font = ExtResource("2_font")
 Label/font_sizes/font_size = 16
+Label/fonts/font = ExtResource("2_font")
 
-[node name="PermUpgrades" type="Control"]
+[sub_resource type="SystemFont" id="SystemFont_a1car"]
+
+[sub_resource type="SystemFont" id="SystemFont_korwa"]
+
+[sub_resource type="SystemFont" id="SystemFont_dkphl"]
+
+[sub_resource type="SystemFont" id="SystemFont_yt7gv"]
+
+[sub_resource type="SystemFont" id="SystemFont_eb8wl"]
+
+[sub_resource type="SystemFont" id="SystemFont_rlxmn"]
+
+[sub_resource type="SystemFont" id="SystemFont_0yb8m"]
+
+[sub_resource type="SystemFont" id="SystemFont_hv3y6"]
+
+[sub_resource type="SystemFont" id="SystemFont_ycl5e"]
+
+[sub_resource type="SystemFont" id="SystemFont_x144x"]
+
+[node name="PermUpgrades" type="Control" unique_id=575185517]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,15 +39,15 @@ grow_vertical = 2
 theme = SubResource("Theme_perm")
 script = ExtResource("1_perm")
 
-[node name="Root" type="Control" parent="."]
-layout_mode = 3
+[node name="Root" type="Control" parent="." unique_id=1840477158]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Dim" type="ColorRect" parent="Root"]
+[node name="Dim" type="ColorRect" parent="Root" unique_id=2056654980]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,7 +56,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.55)
 
-[node name="Panel" type="PanelContainer" parent="Root"]
+[node name="Panel" type="PanelContainer" parent="Root" unique_id=496667118]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -50,80 +70,96 @@ offset_bottom = 95.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Margin" type="MarginContainer" parent="Root/Panel"]
+[node name="Margin" type="MarginContainer" parent="Root/Panel" unique_id=1830767734]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBox" type="VBoxContainer" parent="Root/Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Root/Panel/Margin" unique_id=1940481655]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="Root/Panel/Margin/VBox"]
+[node name="Title" type="Label" parent="Root/Panel/Margin/VBox" unique_id=1895563788]
 layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_a1car")
 theme_override_font_sizes/font_size = 16
-horizontal_alignment = 1
 text = "Permanent Upgrades"
-
-[node name="Currency" type="Label" parent="Root/Panel/Margin/VBox"]
-layout_mode = 2
 horizontal_alignment = 1
-text = "Legacy Shards: 0"
 
-[node name="Rows" type="VBoxContainer" parent="Root/Panel/Margin/VBox"]
+[node name="Currency" type="Label" parent="Root/Panel/Margin/VBox" unique_id=1356061141]
+layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_korwa")
+theme_override_font_sizes/font_size = 8
+text = "Legacy Shards: 0"
+horizontal_alignment = 1
+
+[node name="Rows" type="VBoxContainer" parent="Root/Panel/Margin/VBox" unique_id=687275405]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="HPRow" type="HBoxContainer" parent="Root/Panel/Margin/VBox/Rows"]
+[node name="HPRow" type="HBoxContainer" parent="Root/Panel/Margin/VBox/Rows" unique_id=270161654]
 layout_mode = 2
 
-[node name="Info" type="Label" parent="Root/Panel/Margin/VBox/Rows/HPRow"]
+[node name="Info" type="Label" parent="Root/Panel/Margin/VBox/Rows/HPRow" unique_id=109632497]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = SubResource("SystemFont_dkphl")
+theme_override_font_sizes/font_size = 8
 text = "+5 Max HP per level"
 
-[node name="Buy" type="Button" parent="Root/Panel/Margin/VBox/Rows/HPRow"]
+[node name="Buy" type="Button" parent="Root/Panel/Margin/VBox/Rows/HPRow" unique_id=758747854]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_yt7gv")
 text = "Buy"
 
-[node name="CritRow" type="HBoxContainer" parent="Root/Panel/Margin/VBox/Rows"]
+[node name="CritRow" type="HBoxContainer" parent="Root/Panel/Margin/VBox/Rows" unique_id=890951235]
 layout_mode = 2
 
-[node name="Info" type="Label" parent="Root/Panel/Margin/VBox/Rows/CritRow"]
+[node name="Info" type="Label" parent="Root/Panel/Margin/VBox/Rows/CritRow" unique_id=1168555487]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = SubResource("SystemFont_eb8wl")
+theme_override_font_sizes/font_size = 8
 text = "+1% Crit Chance per level"
 
-[node name="Buy" type="Button" parent="Root/Panel/Margin/VBox/Rows/CritRow"]
+[node name="Buy" type="Button" parent="Root/Panel/Margin/VBox/Rows/CritRow" unique_id=1400764327]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_rlxmn")
 text = "Buy"
 
-[node name="SpeedRow" type="HBoxContainer" parent="Root/Panel/Margin/VBox/Rows"]
+[node name="SpeedRow" type="HBoxContainer" parent="Root/Panel/Margin/VBox/Rows" unique_id=834383610]
 layout_mode = 2
 
-[node name="Info" type="Label" parent="Root/Panel/Margin/VBox/Rows/SpeedRow"]
+[node name="Info" type="Label" parent="Root/Panel/Margin/VBox/Rows/SpeedRow" unique_id=2021816600]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = SubResource("SystemFont_0yb8m")
+theme_override_font_sizes/font_size = 8
 text = "+3% Move Speed per level"
 
-[node name="Buy" type="Button" parent="Root/Panel/Margin/VBox/Rows/SpeedRow"]
+[node name="Buy" type="Button" parent="Root/Panel/Margin/VBox/Rows/SpeedRow" unique_id=881427531]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+theme_override_fonts/font = SubResource("SystemFont_hv3y6")
 text = "Buy"
 
-[node name="Status" type="Label" parent="Root/Panel/Margin/VBox"]
+[node name="Status" type="Label" parent="Root/Panel/Margin/VBox" unique_id=611792469]
 layout_mode = 2
-horizontal_alignment = 1
+theme_override_fonts/font = SubResource("SystemFont_ycl5e")
+theme_override_font_sizes/font_size = 8
 text = "Spend shards earned from previous runs."
+horizontal_alignment = 1
 
-[node name="Back" type="Button" parent="Root/Panel/Margin/VBox"]
+[node name="Back" type="Button" parent="Root/Panel/Margin/VBox" unique_id=73261845]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_fonts/font = SubResource("SystemFont_x144x")
+theme_override_font_sizes/font_size = 16
 text = "Back"
 
 [connection signal="pressed" from="Root/Panel/Margin/VBox/Rows/HPRow/Buy" to="." method="_on_buy_hp_pressed"]

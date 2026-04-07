@@ -1,23 +1,22 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dv8mrtc1mate6"]
 
-[ext_resource type="Script" path="res://scripts/vendor_ui.gd" id="1_vendor"]
+[ext_resource type="Script" uid="uid://dmp0b4vewovwp" path="res://scripts/vendor_ui.gd" id="1_vendor"]
 
-[node name="VendorUI" type="CanvasLayer"]
+[node name="VendorUI" type="CanvasLayer" unique_id=1918102728]
 layer = 4
-texture_filter = 1
 visible = false
 script = ExtResource("1_vendor")
 
-[node name="Root" type="Control" parent="."]
+[node name="Root" type="Control" parent="." unique_id=1379596755]
+texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture_filter = 1
 
-[node name="Dim" type="ColorRect" parent="Root"]
+[node name="Dim" type="ColorRect" parent="Root" unique_id=1943600911]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +25,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.58)
 
-[node name="Panel" type="PanelContainer" parent="Root"]
+[node name="Panel" type="PanelContainer" parent="Root" unique_id=1865858834]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -40,47 +39,47 @@ offset_bottom = 72.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Margin" type="MarginContainer" parent="Root/Panel"]
+[node name="Margin" type="MarginContainer" parent="Root/Panel" unique_id=1096511769]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBox" type="VBoxContainer" parent="Root/Panel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Root/Panel/Margin" unique_id=491069391]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="Root/Panel/Margin/VBox"]
+[node name="Title" type="Label" parent="Root/Panel/Margin/VBox" unique_id=1626955272]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
 text = "Wandering Vendor"
-
-[node name="Gold" type="Label" parent="Root/Panel/Margin/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 11
 horizontal_alignment = 1
+
+[node name="Gold" type="Label" parent="Root/Panel/Margin/VBox" unique_id=2079222959]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
 text = "Gold: 0"
-
-[node name="Offers" type="HBoxContainer" parent="Root/Panel/Margin/VBox"]
-layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 6
-
-[node name="Status" type="Label" parent="Root/Panel/Margin/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 10
 horizontal_alignment = 1
-text = "Spend gold now, or continue to the map."
 
-[node name="Actions" type="HBoxContainer" parent="Root/Panel/Margin/VBox"]
+[node name="Offers" type="HBoxContainer" parent="Root/Panel/Margin/VBox" unique_id=186391215]
 layout_mode = 2
+theme_override_constants/separation = 6
 alignment = 1
-theme_override_constants/separation = 8
 
-[node name="Continue" type="Button" parent="Root/Panel/Margin/VBox/Actions"]
+[node name="Status" type="Label" parent="Root/Panel/Margin/VBox" unique_id=1893641114]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Spend gold now, or continue to the map."
+horizontal_alignment = 1
+
+[node name="Actions" type="HBoxContainer" parent="Root/Panel/Margin/VBox" unique_id=1049436278]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Continue" type="Button" parent="Root/Panel/Margin/VBox/Actions" unique_id=1959979680]
 custom_minimum_size = Vector2(108, 24)
 layout_mode = 2
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 8
 text = "Continue"

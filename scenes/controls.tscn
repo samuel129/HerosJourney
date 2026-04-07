@@ -14,11 +14,12 @@ texture = ExtResource("1_i2gav")
 script = ExtResource("2_5tddo")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=76598259]
-offset_left = 114.0
-offset_top = 67.0
-offset_right = 210.0
-offset_bottom = 159.0
+offset_left = 109.0
+offset_top = 80.0
+offset_right = 308.44
+offset_bottom = 303.0
 theme_override_colors/default_color = Color(0.9529412, 0.8745098, 0.5882353, 1)
+theme_override_font_sizes/normal_font_size = 8
 text = "W - JUMP
 A - MOVE LEFT
 S - MOVE DOWN

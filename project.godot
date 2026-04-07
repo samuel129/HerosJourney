@@ -31,10 +31,7 @@ window/stretch/scale_mode="integer"
 
 [gui]
 
-theme/default_font_multichannel_signed_distance_field=false
-theme/default_font_generate_mipmaps=false
-theme/custom_font="uid://nkxktoiqvu4x"
-common/snap_controls_to_pixels=true
+theme/custom_font="uid://b1dl67vdlpwjb"
 
 [input]
 
