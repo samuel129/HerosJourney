@@ -7,6 +7,9 @@ var chunk_scenes: Array[PackedScene] = [
 	preload("res://scenes/level_chunks/chunk_03.tscn"),
 	#preload("res://scenes/level_chunks/chunk_04.tscn") Temporarily disabled due to camera limits
 ]
+var mini_boss_scenes: Array[PackedScene] = [
+	preload("res://scenes/level_chunks/chunk_miniboss_01.tscn")
+]
 var chunk_end: PackedScene = preload("res://scenes/level_chunks/chunk_end.tscn")
 var chunk_count: int = 5
 
@@ -15,6 +18,8 @@ const ROW_HEIGHT := 2
 const NUM_THEMES := 7
 
 func generate_level(level_config: Dictionary = {}) -> Node2D:
+	if bool(level_config.get("mini_boss_stage", false)):
+		return generate_mini_boss_level(level_config)
 	var level_root = Node2D.new()
 	level_root.name = "GeneratedLevel"
 	var total_chunks := int(level_config.get("chunk_count", chunk_count))
@@ -54,14 +59,33 @@ func generate_level(level_config: Dictionary = {}) -> Node2D:
 	_apply_theme_to_chunk(end_chunk, theme_row)
 	return level_root
 
+func generate_mini_boss_level(level_config: Dictionary) -> Node2D:
+	level_config["manual_enemy_spawn"] = true
+	var level_root = Node2D.new()
+	level_root.name = "GeneratedLevel"
+	var theme_row := int(level_config.get("theme_row", -1))
+	if theme_row < 0:
+		theme_row = randi() % NUM_THEMES
+	theme_row = clampi(theme_row, 0, NUM_THEMES - 1)
+	level_root.set_meta("level_config", level_config.duplicate(true))
+	level_root.set_meta("theme_row", theme_row)
+	var chunk_scene = mini_boss_scenes.pick_random()
+	var chunk = chunk_scene.instantiate()
+	level_root.add_child(chunk)
+	chunk.global_position = Vector2.ZERO
+	_apply_theme_to_chunk(chunk, theme_row)
+	return level_root
+
 func _apply_theme_to_chunk(chunk: Node2D, theme_row: int) -> void:
-	var tilemap := chunk.get_node_or_null("Foreground") as TileMapLayer
-	if tilemap == null:
-		return
-	var used_cells = tilemap.get_used_cells()
-	for cell in used_cells:
-		var source_id = tilemap.get_cell_source_id(cell)
-		var atlas_coords = tilemap.get_cell_atlas_coords(cell)
-		if source_id == -1: continue
-		var new_coords = Vector2i(atlas_coords.x, atlas_coords.y + theme_row * ROW_HEIGHT)
-		tilemap.set_cell(cell, source_id, new_coords)
+	var tilemaps := chunk.find_children("", "TileMapLayer", true, false)
+	for tilemap in tilemaps:
+		if not tilemap.is_in_group("themed_tilemap"): continue
+		if tilemap == null:
+			return
+		var used_cells = tilemap.get_used_cells()
+		for cell in used_cells:
+			var source_id = tilemap.get_cell_source_id(cell)
+			var atlas_coords = tilemap.get_cell_atlas_coords(cell)
+			if source_id == -1: continue
+			var new_coords = Vector2i(atlas_coords.x, atlas_coords.y + theme_row * ROW_HEIGHT)
+			tilemap.set_cell(cell, source_id, new_coords)

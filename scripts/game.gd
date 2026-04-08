@@ -48,6 +48,7 @@ func _process(_delta: float) -> void:
 	_try_manual_stage_advance()
 
 func _ready() -> void:
+	add_to_group("game")
 	if enemy_scene == null:
 		enemy_scene = load("res://scenes/enemies/enemy_grunt.tscn")
 	if enemy_skirmisher_scene == null:
@@ -130,11 +131,10 @@ func _apply_camera_limits() -> void:
 	var tr_marker: Marker2D = current_level.find_child("TopRight", true, false) as Marker2D
 	if tr_marker:
 		$Camera2D.limit_right = int(tr_marker.global_position.x)
-		$Camera2D.limit_top = int(tr_marker.global_position.y - 16)
+		$Camera2D.limit_top = int(tr_marker.global_position.y + 16)
 
 func spawn_enemies_for_chunks() -> void:
-	if current_level == null:
-		return
+	if current_level == null: return
 
 	var enemy_multiplier: float = _get_enemy_multiplier_for_level()
 	var spawn_entries: Array[Dictionary] = _collect_spawn_entries()
@@ -142,7 +142,7 @@ func spawn_enemies_for_chunks() -> void:
 		return
 
 	if _is_mini_boss_level():
-		_spawn_mini_boss_for_level(_extract_markers_from_entries(spawn_entries))
+		#_spawn_mini_boss_for_level(_extract_markers_from_entries(spawn_entries))
 		return
 
 	for entry in spawn_entries:
