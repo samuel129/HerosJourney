@@ -143,8 +143,8 @@ func _physics_process(delta: float) -> void:
 	var really_falling = gravity_component.is_falling and not gravity_component.is_near_ground(self)
 	animation_component.handle_jump_animation(jump_component.is_jumping, really_falling)
 	
-	var attack = false if controls_locked else input_component.get_attack_input()
-	if attack_component.can_attack and attack:
+	var can_attack = false if controls_locked else input_component.get_attack_input()
+	if attack_component.can_attack and can_attack:
 		Sword_attack.play()
 		attack_component.handle_attack(facing_dir, self)
 		animation_component.handle_attack_animation()

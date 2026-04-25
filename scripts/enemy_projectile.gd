@@ -11,6 +11,7 @@ var source_enemy: Node = null
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	area_entered.connect(_on_area_entered)
 
 func launch(
 	dir: Vector2,
@@ -44,6 +45,10 @@ func _on_body_entered(body: Node) -> void:
 		if not pierce:
 			queue_free()
 		return
+
+func _on_area_entered(area: Node) -> void:
+	if area.is_in_group("attack_hitbox"):
+		queue_free()
 
 	if not pierce:
 		queue_free()

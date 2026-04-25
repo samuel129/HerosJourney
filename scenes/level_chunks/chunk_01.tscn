@@ -604,7 +604,7 @@ position = Vector2(368, 16)
 position = Vector2(272, 16)
 
 [node name="EnemySpawn4" type="Marker2D" parent="EnemySpawns" unique_id=1880746337]
-position = Vector2(472, -48)
+position = Vector2(491, -49)
 
 [node name="Entry" type="Marker2D" parent="." unique_id=176456456]
 position = Vector2(8, 0)

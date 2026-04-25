@@ -1,7 +1,7 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://im1og4k2ofql"]
 
-[ext_resource type="Script" path="res://scripts/enemy_grunt.gd" id="1_enemy"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/enemy_projectile.tscn" id="2_projectile"]
+[ext_resource type="Script" uid="uid://c8hfmopuw1njf" path="res://scripts/enemy_grunt.gd" id="1_enemy"]
+[ext_resource type="PackedScene" uid="uid://c761t0d71caq2" path="res://scenes/enemies/enemy_projectile.tscn" id="2_projectile"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(14, 18)
@@ -9,8 +9,12 @@ size = Vector2(14, 18)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
 size = Vector2(16, 20)
 
-[node name="EnemyRanger" type="CharacterBody2D"]
-collision_layer = 2
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h825k"]
+size = Vector2(17, 20)
+
+[node name="EnemyRanger" type="CharacterBody2D" unique_id=1909771897 groups=["enemies"]]
+collision_layer = 3
+collision_mask = 3
 script = ExtResource("1_enemy")
 move_speed = 52.0
 chase_range = 240.0
@@ -34,17 +38,24 @@ projectile_damage = 8
 xp_reward = 28
 gold_reward = 7
 
-[node name="Body" type="Polygon2D" parent="."]
+[node name="Body" type="Polygon2D" parent="." unique_id=316877016]
 color = Color(0.18, 0.24, 0.52, 1)
 polygon = PackedVector2Array(-6, -10, 7, -10, 9, 1, 0, 10, -8, 2)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=47676275]
+visible = false
 shape = SubResource("RectangleShape2D_body")
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="." unique_id=73269207]
 collision_layer = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1818301492]
 shape = SubResource("RectangleShape2D_hitbox")
 
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1177926208]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=841697968]
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_h825k")
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

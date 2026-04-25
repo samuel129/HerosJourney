@@ -1,20 +1,19 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://c761t0d71caq2"]
 
-[ext_resource type="Script" path="res://scripts/enemy_projectile.gd" id="1_proj"]
+[ext_resource type="Script" uid="uid://8er2pmhndo7l" path="res://scripts/enemy_projectile.gd" id="1_proj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_proj"]
 radius = 3.0
 
-[node name="EnemyProjectile" type="Area2D"]
-script = ExtResource("1_proj")
+[node name="EnemyProjectile" type="Area2D" unique_id=1071146450]
 collision_layer = 0
-collision_mask = 1
-monitoring = true
+collision_mask = 3
 monitorable = false
+script = ExtResource("1_proj")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=362490489]
 shape = SubResource("CircleShape2D_proj")
 
-[node name="Visual" type="Polygon2D" parent="."]
+[node name="Visual" type="Polygon2D" parent="." unique_id=148991310]
 color = Color(0.98, 0.48, 0.18, 1)
 polygon = PackedVector2Array(-3, -2, 3, 0, -3, 2)

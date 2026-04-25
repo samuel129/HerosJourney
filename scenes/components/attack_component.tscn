@@ -10,7 +10,7 @@ script = ExtResource("1_3dc41")
 active_timer = NodePath("ActiveTimer")
 cooldown_timer = NodePath("CooldownTimer")
 
-[node name="AttackHitbox" type="Area2D" parent="." unique_id=2022568776]
+[node name="AttackHitbox" type="Area2D" parent="." unique_id=2022568776 groups=["attack_hitbox"]]
 collision_layer = 2
 collision_mask = 2
 monitoring = false

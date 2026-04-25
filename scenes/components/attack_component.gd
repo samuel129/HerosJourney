@@ -13,6 +13,7 @@ var attacker_pos: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	$AttackHitbox.monitoring = false
+	$AttackHitbox.monitorable = false
 
 func handle_hitbox_flip(direction: int, body_position: Vector2) -> void:
 	$AttackHitbox.global_position = (direction * combo_fast_hitbox_offset) + body_position
@@ -23,6 +24,7 @@ func handle_attack(direction: int, body: CharacterBody2D) -> void:
 	attacker_pos = body.global_position
 	handle_hitbox_flip(direction, body.global_position)
 	$AttackHitbox.monitoring = true
+	$AttackHitbox.monitorable = true
 	
 	active_timer.wait_time = .25
 	cooldown_timer.wait_time = .40
@@ -33,6 +35,7 @@ func handle_attack(direction: int, body: CharacterBody2D) -> void:
 	
 func _on_active_timer_timeout():
 	$AttackHitbox.monitoring = false
+	$AttackHitbox.monitorable = false
 	hit_targets.clear()
 
 func _on_cooldown_timer_timeout():
@@ -42,8 +45,9 @@ func _on_cooldown_timer_timeout():
 func _on_attack_hitbox_body_entered(target: Node2D) -> void:
 	if target.is_in_group("enemies") and target not in hit_targets:
 		if target.has_method("take_damage"):
-			target.take_damage(calculate_damage(RunManager.get_stat("attack")))
-		hit_targets.append(target)
+			var damage = calculate_damage(RunManager.get_stat("attack"))
+			target.take_damage(damage)
+			hit_targets.append(target)
 		if target is CharacterBody2D:
 			var enemy := target as CharacterBody2D
 			var dir : int = sign(enemy.global_position.x - attacker_pos.x)

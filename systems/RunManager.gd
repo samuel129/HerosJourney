@@ -111,6 +111,7 @@ func start_new_run(seed: int = -1) -> void:
 	else:
 		run_data.run_seed = seed
 	_rng.seed = run_data.run_seed
+	#stage 7 for ranged
 	run_data.stage = 1
 	run_data.cleared_stages = 0
 	_apply_permanent_upgrades_to_run()
