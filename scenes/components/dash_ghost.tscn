@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://casfvjox5y58x"]
+
+[ext_resource type="Script" uid="uid://bmsxupe20qsmm" path="res://scenes/components/dash_ghost.gd" id="1_0uebi"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0uebi"]
+
+[node name="DashGhost" type="Node2D" unique_id=850475472]
+script = ExtResource("1_0uebi")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2092894142]
+sprite_frames = SubResource("SpriteFrames_0uebi")

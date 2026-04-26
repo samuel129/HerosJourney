@@ -13,7 +13,7 @@ extends CharacterBody2D
 @export var experience_component: ExperienceComponent
 @export var Footstep: AudioStreamPlayer2D
 @export var Sword_attack: AudioStreamPlayer2D
-
+@export var ghost_scene: PackedScene
 
 var controls_locked: bool = true
 var facing_dir: float
@@ -183,7 +183,17 @@ func dash() -> void:
 		movement_component.handle_dash_speed(self, facing_dir)
 		gravity_component.disable_gravity(self)
 		set_collision_layer_value(3, false)
+		
+		spawn_dash_ghosts()
 
+func spawn_dash_ghosts() -> void:
+	var count = 3
+	for i in count:
+		var ghost = ghost_scene.instantiate()
+		get_tree().current_scene.add_child(ghost)
+		ghost.setup_from_sprite($AnimatedSprite2D)
+		await get_tree().create_timer(0.04).timeout
+	
 func receive_damage(amount: int) -> void:
 	if is_dead:
 		return
