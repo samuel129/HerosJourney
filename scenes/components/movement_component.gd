@@ -8,3 +8,6 @@ extends Node
 func handle_horizontal_movement(body: CharacterBody2D, direction: float, sprinting: bool) -> void:
 	var current_speed = sprint_speed if sprinting else speed
 	body.velocity.x = direction * current_speed
+
+func handle_dash_speed(body: CharacterBody2D, direction: float):
+	body.velocity.x = direction * speed * 4

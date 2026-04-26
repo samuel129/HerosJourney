@@ -104,6 +104,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var player := get_tree().get_first_node_in_group("player") as Node2D
+
 	target_player = player
 	var target_direction: float = float(facing)
 
@@ -346,8 +347,3 @@ func _get_default_gold_reward() -> int:
 		ThreatTier.BOSS:
 			return 100
 	return 5
-
-func _on_hitbox_entered(body):
-	if body.is_in_group("player"):
-		if body.has_method("receive_damage"):
-			body.receive_damage(attack_damage)

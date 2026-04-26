@@ -31,7 +31,6 @@ func handle_horizontal_flip(move_direction: float) -> void:
 func handle_move_animation(move_direction: float, sprinting: bool) -> void:
 	if animation_locked:
 		return
-	handle_horizontal_flip(move_direction)
 	
 	if move_direction == 0:
 		play_if_new("idle")
@@ -57,10 +56,18 @@ func handle_attack_animation() -> void:
 	animation_locked = true
 	sprite.play("combo_fast")
 
+func handle_dash_animation() -> void:
+	if animation_locked:
+		return
+	animation_locked = true
+	sprite.play("dash")
+	
+func handle_dash_complete() -> void:
+	animation_locked = false
+
 func play_death_animation() -> void:
 	animation_locked = true
 	sprite.play("death")
-	
 	
 func _on_anim_finished() -> void:
 	if sprite.animation == "combo_fast":

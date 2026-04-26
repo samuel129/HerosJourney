@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cejp25xcc0jnl"]
 
-[ext_resource type="Script" path="res://scripts/enemy_grunt.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://c8hfmopuw1njf" path="res://scripts/enemy_grunt.gd" id="1_enemy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(22, 26)
@@ -8,8 +8,8 @@ size = Vector2(22, 26)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
 size = Vector2(24, 28)
 
-[node name="EnemyBrute" type="CharacterBody2D"]
-collision_layer = 2
+[node name="EnemyBrute" type="CharacterBody2D" unique_id=1949176390]
+collision_layer = 3
 script = ExtResource("1_enemy")
 move_speed = 34.0
 chase_range = 150.0
@@ -23,17 +23,17 @@ attack_cooldown_time = 1.22
 xp_reward = 44
 gold_reward = 11
 
-[node name="Body" type="Polygon2D" parent="."]
+[node name="Body" type="Polygon2D" parent="." unique_id=336742338]
 color = Color(0.42, 0.2, 0.08, 1)
 polygon = PackedVector2Array(-11, -13, 11, -13, 11, 13, -11, 13)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1818328247]
 shape = SubResource("RectangleShape2D_body")
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="." unique_id=2127182047]
 collision_layer = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1956881034]
 shape = SubResource("RectangleShape2D_hitbox")
 
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=315094996]

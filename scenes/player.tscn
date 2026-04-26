@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://co6so2lwvs63a" path="res://scenes/components/animation_component.tscn" id="16_fulsm"]
 [ext_resource type="PackedScene" uid="uid://cqtj7a7772fe6" path="res://scenes/components/jump_component.tscn" id="17_qfm1y"]
 [ext_resource type="PackedScene" uid="uid://dwab6gkfo7bdu" path="res://scenes/components/health_component.tscn" id="18_fulsm"]
+[ext_resource type="PackedScene" uid="uid://bfr3mcefmfsgt" path="res://scenes/components/dash_component.tscn" id="24_ujl30"]
 [ext_resource type="PackedScene" uid="uid://bry5pfc2g8hll" path="res://scenes/components/attack_component.tscn" id="25_ke2ow"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_oxcmq"]
@@ -1108,19 +1109,21 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qsb7e"]
 radius = 6.0
 
-[node name="Player" type="CharacterBody2D" unique_id=563289409 node_paths=PackedStringArray("gravity_component", "input_component", "movement_component", "animation_component", "jump_component", "health_component", "attack_component")]
+[node name="Player" type="CharacterBody2D" unique_id=563289409 node_paths=PackedStringArray("gravity_component", "input_component", "movement_component", "animation_component", "jump_component", "dash_component", "health_component", "attack_component")]
+collision_layer = 4
 script = ExtResource("1_y4r1p")
 gravity_component = NodePath("GravityComponent")
 input_component = NodePath("InputComponent")
 movement_component = NodePath("MovementComponent")
 animation_component = NodePath("AnimationComponent")
 jump_component = NodePath("JumpComponent")
+dash_component = NodePath("DashComponent")
 health_component = NodePath("HealthComponent")
 attack_component = NodePath("AttackComponent")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=673780519]
 sprite_frames = SubResource("SpriteFrames_vau08")
-animation = &"combo_fast"
+animation = &"dash"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1380215214]
 shape = SubResource("CapsuleShape2D_qsb7e")
@@ -1139,6 +1142,8 @@ target_position = Vector2(0, 10)
 sprite = NodePath("../AnimatedSprite2D")
 
 [node name="JumpComponent" parent="." unique_id=1458893281 instance=ExtResource("17_qfm1y")]
+
+[node name="DashComponent" parent="." unique_id=726437954 instance=ExtResource("24_ujl30")]
 
 [node name="HealthComponent" parent="." unique_id=1950208327 instance=ExtResource("18_fulsm")]
 

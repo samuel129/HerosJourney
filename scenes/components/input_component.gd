@@ -9,6 +9,9 @@ func _process(_delta: float) -> void:
 func get_jump_input() -> bool:
 	return Input.is_action_just_pressed("jump")
 
+func get_dash_input() -> bool:
+	return Input.is_action_just_pressed("dash")
+
 func get_attack_input() -> bool:
 	return Input.is_action_just_pressed("combo_fast")
 

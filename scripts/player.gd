@@ -6,6 +6,7 @@ extends CharacterBody2D
 @export var movement_component: MovementComponent
 @export var animation_component: AnimationComponent
 @export var jump_component: JumpComponent
+@export var dash_component: DashComponent
 @export var health_component: HealthComponent
 @export var attack_component: AttackComponent
 @export var special_meter_component: SpecialMeterComponent
@@ -39,6 +40,7 @@ func _connect_runtime_signals() -> void:
 		animation_component.attack_finished.connect(_on_attack_finished)
 	if health_component and not health_component.died.is_connected(_on_health_component_died):
 		health_component.died.connect(_on_health_component_died)
+	dash_component.dash_complete.connect(_on_dash_complete)
 
 func play_spawn_sequence() -> void:
 	controls_locked = true
@@ -110,6 +112,10 @@ func _ensure_progression_components() -> void:
 			add_child(sm_comp)
 			special_meter_component = sm_comp
 
+func _on_dash_complete() -> void:
+	animation_component.handle_dash_complete()
+	set_collision_layer_value(3, true)
+
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		velocity = Vector2.ZERO
@@ -123,6 +129,13 @@ func _physics_process(delta: float) -> void:
 	var fast_falling = input_component.is_fast_falling()
 	var dir = horizontal
 	var should_play_footsteps := (not controls_locked) and is_on_floor() and absf(dir) > 0.01
+	
+	if is_on_floor():
+		dash_component.reset_dashes()
+	
+	if dash_component.is_dashing:
+		move_and_slide()
+		return
 	
 	if should_play_footsteps and not _footsteps_on:
 		Footstep.play()
@@ -140,18 +153,36 @@ func _physics_process(delta: float) -> void:
 	jump_component.handle_jump(self, delta, jump, input_component.is_jump_held())	
 	if not jump_component.is_jumping and not gravity_component.is_falling:
 		animation_component.handle_move_animation(dir, sprinting)
+	animation_component.handle_horizontal_flip(dir)
 	var really_falling = gravity_component.is_falling and not gravity_component.is_near_ground(self)
 	animation_component.handle_jump_animation(jump_component.is_jumping, really_falling)
 	
 	var can_attack = false if controls_locked else input_component.get_attack_input()
 	if attack_component.can_attack and can_attack:
-		Sword_attack.play()
-		attack_component.handle_attack(facing_dir, self)
-		animation_component.handle_attack_animation()
-		if self.is_on_floor():
-			controls_locked = true
+		attack()
+		move_and_slide()
+		return
 	
+	var can_dash = false if controls_locked  else input_component.get_dash_input()
+	if dash_component.can_dash and can_dash:
+		dash()
 	move_and_slide()
+
+func attack() -> void:
+	Sword_attack.play()
+	attack_component.handle_attack(facing_dir, self)
+	animation_component.handle_attack_animation()
+	if self.is_on_floor():
+		controls_locked = true
+
+func dash() -> void:
+		dash_component.handle_dash()
+		animation_component.handle_dash_animation()
+		if !self.is_on_floor():
+			dash_component.decrement_dashes()
+		movement_component.handle_dash_speed(self, facing_dir)
+		gravity_component.disable_gravity(self)
+		set_collision_layer_value(3, false)
 
 func receive_damage(amount: int) -> void:
 	if is_dead:

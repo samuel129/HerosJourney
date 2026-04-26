@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bfr3mcefmfsgt"]
+
+[ext_resource type="Script" uid="uid://ulsebaioiqmi" path="res://scenes/components/dash_component.gd" id="1_ilw3r"]
+
+[node name="DashComponent" type="Node" unique_id=726437954 node_paths=PackedStringArray("active_timer", "cooldown_timer")]
+script = ExtResource("1_ilw3r")
+active_timer = NodePath("active_timer")
+cooldown_timer = NodePath("cooldown_timer")
+
+[node name="active_timer" type="Timer" parent="." unique_id=1403157031]
+one_shot = true
+
+[node name="cooldown_timer" type="Timer" parent="." unique_id=960047750]
+one_shot = true
+
+[connection signal="timeout" from="active_timer" to="." method="_on_active_timer_timeout"]
+[connection signal="timeout" from="cooldown_timer" to="." method="_on_cooldown_timer_timeout"]

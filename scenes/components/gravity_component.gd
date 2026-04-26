@@ -23,3 +23,6 @@ func handle_gravity(body: CharacterBody2D, delta: float, fast_falling_input: boo
 func is_near_ground(body: CharacterBody2D) -> bool:
 	var rc: RayCast2D = body.get_node("ground_check")
 	return rc.is_colliding()
+
+func disable_gravity(body: CharacterBody2D) -> void:
+	body.velocity.y = 0
