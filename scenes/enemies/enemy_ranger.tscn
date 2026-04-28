@@ -13,7 +13,8 @@ size = Vector2(16, 20)
 size = Vector2(17, 20)
 
 [node name="EnemyRanger" type="CharacterBody2D" unique_id=1909771897 groups=["enemies"]]
-collision_layer = 3
+collision_layer = 4
+collision_mask = 3
 script = ExtResource("1_enemy")
 move_speed = 52.0
 chase_range = 240.0
@@ -46,13 +47,15 @@ visible = false
 shape = SubResource("RectangleShape2D_body")
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=73269207]
-collision_layer = 2
+collision_layer = 4
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1818301492]
 shape = SubResource("RectangleShape2D_hitbox")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1177926208]
-collision_layer = 3
+collision_layer = 4
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=841697968]
 position = Vector2(-0.5, 0)

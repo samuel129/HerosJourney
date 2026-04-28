@@ -468,7 +468,10 @@ func _spawn_stage_portal() -> void:
 	shape.radius = 22.0
 	collision.shape = shape
 	trigger.add_child(collision)
-	trigger.set_collision_mask_value(4, true)
+	trigger.set_collision_layer_value(6, true)
+	trigger.set_collision_mask_value(2, true)
+	trigger.monitoring = true
+	trigger.monitorable = true
 	trigger.body_entered.connect(_on_stage_portal_entered)
 	stage_portal_root.add_child(trigger)
 

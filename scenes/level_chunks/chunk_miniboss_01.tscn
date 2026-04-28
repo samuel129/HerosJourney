@@ -636,7 +636,8 @@ tile_map_data = PackedByteArray("AAANAAAAAAAAAAAAAAAOAAAAAAAAAAAAAAAPAAAAAAAAAAA
 tile_set = SubResource("TileSet_72qvi")
 
 [node name="ArenaTrigger" type="Area2D" parent="." unique_id=269651288]
-collision_mask = 9
+collision_layer = 32
+collision_mask = 2
 script = ExtResource("4_3siy3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ArenaTrigger" unique_id=1902075526]

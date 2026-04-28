@@ -10,7 +10,8 @@ size = Vector2(24, 30)
 size = Vector2(28, 32)
 
 [node name="EnemyMiniBoss" type="CharacterBody2D" unique_id=1446668119]
-collision_layer = 3
+collision_layer = 4
+collision_mask = 3
 script = ExtResource("1_mini")
 threat_tier = 1
 move_speed = 52.0
@@ -43,7 +44,8 @@ polygon = PackedVector2Array(-12, -15, 12, -15, 12, 15, -12, 15)
 shape = SubResource("RectangleShape2D_body")
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=597046570]
-collision_layer = 2
+collision_layer = 4
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1738265591]
 shape = SubResource("RectangleShape2D_hitbox")

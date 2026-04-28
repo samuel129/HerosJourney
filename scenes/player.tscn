@@ -1111,7 +1111,8 @@ animations = [{
 radius = 6.0
 
 [node name="Player" type="CharacterBody2D" unique_id=563289409 node_paths=PackedStringArray("gravity_component", "input_component", "movement_component", "animation_component", "jump_component", "dash_component", "health_component", "attack_component")]
-collision_layer = 12
+collision_layer = 2
+collision_mask = 33
 script = ExtResource("1_y4r1p")
 gravity_component = NodePath("GravityComponent")
 input_component = NodePath("InputComponent")
