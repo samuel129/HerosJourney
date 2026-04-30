@@ -3,6 +3,41 @@
 [ext_resource type="Script" uid="uid://b3p8pjmmvr5n6" path="res://scenes/components/main_menu.gd" id="1_gu2dv"]
 [ext_resource type="Theme" uid="uid://cjtgmcnr4asnk" path="res://assets/fonts/button.tres" id="2_bqqt6"]
 [ext_resource type="Texture2D" uid="uid://caj8nswd8qg2n" path="res://assets/art/ui/menubackground.png" id="3_fsq1i"]
+[ext_resource type="Shader" uid="uid://blshmg1ouxhc7" path="res://assets/art/ui/swirl_bg.gdshader" id="4_wu84c"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8ln24"]
+shader = ExtResource("4_wu84c")
+shader_parameter/polar_coordinates = false
+shader_parameter/polar_center = Vector2(0.5, 0.5)
+shader_parameter/polar_zoom = 1.0
+shader_parameter/polar_repeat = 1.0
+shader_parameter/spin_rotation = 0.0
+shader_parameter/spin_speed = 10.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(0, 0, 0.84313726, 1)
+shader_parameter/colour_2 = Color(0, 0, 0, 1)
+shader_parameter/colour_3 = Color(0, 0, 0, 1)
+shader_parameter/contrast = 2.0
+shader_parameter/spin_amount = 0.36
+shader_parameter/pixel_filter = 700.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wu84c"]
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 4
+border_color = Color(0.36078432, 0.36078432, 0.36078432, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ln24"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="Theme" id="Theme_wu84c"]
 
@@ -23,6 +58,29 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_gu2dv")
 
+[node name="ColorRect" type="ColorRect" parent="Main Menu" unique_id=645307415]
+z_index = -2
+material = SubResource("ShaderMaterial_8ln24")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Main Menu" unique_id=1840514970]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 20.0
+offset_right = 10.0
+offset_bottom = 92.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 56
+text = "RIFTBOUND"
+horizontal_alignment = 1
+vertical_alignment = 2
+
 [node name="Restart Data" type="Button" parent="Main Menu" unique_id=605140991]
 layout_mode = 1
 anchors_preset = 1
@@ -34,7 +92,11 @@ offset_right = -5.0
 offset_bottom = 24.0
 grow_horizontal = 0
 theme = ExtResource("2_bqqt6")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0.06245753, 0.6535835, 1)
 theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Restart Data"
 
 [node name="Button_Manager" type="Control" parent="Main Menu" unique_id=1110405899]
@@ -44,15 +106,16 @@ anchor_top = 0.5
 anchor_right = 0.496875
 anchor_bottom = 0.5
 offset_left = -90.0
-offset_top = -70.0
+offset_top = -50.0
 offset_right = 90.0
-offset_bottom = 70.0
+offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_bqqt6")
 metadata/_edit_use_anchors_ = true
 
 [node name="Menubackground" type="Sprite2D" parent="Main Menu/Button_Manager" unique_id=497224509]
+visible = false
 position = Vector2(90, 70)
 scale = Vector2(1.4, 1.3916668)
 texture = ExtResource("3_fsq1i")
@@ -70,28 +133,44 @@ theme_override_constants/separation = 4
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0.0627451, 0.654902, 1)
 theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Start"
 
 [node name="Upgrades" type="Button" parent="Main Menu/Button_Manager/Buttons" unique_id=1547829364]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0.0627451, 0.654902, 1)
 theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Upgrades"
 
 [node name="Controls" type="Button" parent="Main Menu/Button_Manager/Buttons" unique_id=49792201]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0.0627451, 0.654902, 1)
 theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Controls"
 
 [node name="Quit" type="Button" parent="Main Menu/Button_Manager/Buttons" unique_id=402054808]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0.0627451, 0.654902, 1)
 theme_override_font_sizes/font_size = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Quit"
 
 [connection signal="pressed" from="Main Menu/Restart Data" to="Main Menu" method="_on_restart_data_pressed"]
