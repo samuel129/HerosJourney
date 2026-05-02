@@ -1,38 +1,85 @@
 [gd_scene format=3 uid="uid://dg70byhjiay8m"]
 
-[ext_resource type="Texture2D" uid="uid://d4nvq1riap0cq" path="res://assets/art/ui/control background.png" id="1_i2gav"]
 [ext_resource type="Script" uid="uid://d0p0hpat18txo" path="res://scenes/control_background.gd" id="2_5tddo"]
 [ext_resource type="Texture2D" uid="uid://oiglthkgt7px" path="res://assets/art/ui/xbutton.png" id="3_cywyo"]
 [ext_resource type="Texture2D" uid="uid://cvrnu24fea367" path="res://assets/art/ui/xbutton hover.png" id="4_ihl6s"]
+[ext_resource type="Shader" uid="uid://blshmg1ouxhc7" path="res://assets/art/ui/swirl_bg.gdshader" id="5_jlst0"]
 
-[node name="Controls" type="Node2D" unique_id=1895149623]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dloai"]
+shader = ExtResource("5_jlst0")
+shader_parameter/polar_coordinates = false
+shader_parameter/polar_center = Vector2(0.5, 0.5)
+shader_parameter/polar_zoom = 1.0
+shader_parameter/polar_repeat = 1.0
+shader_parameter/spin_rotation = 0.0
+shader_parameter/spin_speed = 10.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(0.31029624, 0.0011401213, 0.55278563, 1)
+shader_parameter/colour_2 = Color(0, 0, 0, 1)
+shader_parameter/colour_3 = Color(0, 0, 0, 1)
+shader_parameter/contrast = 2.0
+shader_parameter/spin_amount = 0.36
+shader_parameter/pixel_filter = 700.0
 
-[node name="ControlBackground" type="Sprite2D" parent="." unique_id=1323416255]
+[node name="Controls" type="Control" unique_id=801336002]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Root" type="Control" parent="." unique_id=852341777]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ControlBackground" type="Sprite2D" parent="Root" unique_id=1323416255]
 position = Vector2(161, 93)
 scale = Vector2(2.3833334, 1.8333333)
-texture = ExtResource("1_i2gav")
 script = ExtResource("2_5tddo")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=76598259]
-offset_left = 106.0
-offset_top = 85.0
-offset_right = 241.0
-offset_bottom = 147.0
-theme_override_colors/default_color = Color(0.9529412, 0.8745098, 0.5882353, 1)
-theme_override_font_sizes/normal_font_size = 8
+[node name="RichTextLabel" type="RichTextLabel" parent="Root" unique_id=76598259]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/normal_font_size = 16
 text = "W/ Up Arrow /Space: Jump
 A/ Left Arrow: Move Left
 D/ Right Arrow: Move Right
 S/ Down Arrow: Fast Fall
 Shift: Sprint/Run
 Left Click /Z: Attack"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Exit" type="TextureButton" parent="." unique_id=1668999483]
-offset_left = 202.0
-offset_top = 64.0
-offset_right = 222.0
-offset_bottom = 84.0
+[node name="Exit" type="TextureButton" parent="Root" unique_id=1668999483]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -20.0
+offset_right = 20.0
+grow_vertical = 0
 texture_normal = ExtResource("3_cywyo")
 texture_hover = ExtResource("4_ihl6s")
 
-[connection signal="pressed" from="Exit" to="ControlBackground" method="_on_exit_pressed"]
+[node name="ColorRect" type="ColorRect" parent="Root" unique_id=391302857]
+z_index = -2
+material = SubResource("ShaderMaterial_dloai")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[connection signal="pressed" from="Root/Exit" to="Root/ControlBackground" method="_on_exit_pressed"]

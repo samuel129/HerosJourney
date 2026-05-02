@@ -160,7 +160,7 @@ theme_override_colors/font_hover_color = Color(0, 0.0627451, 0.654902, 1)
 theme_override_font_sizes/font_size = 8
 theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
 theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
-text = "Controls"
+text = "Settings"
 
 [node name="Quit" type="Button" parent="Main Menu/Button_Manager/Buttons" unique_id=402054808]
 custom_minimum_size = Vector2(50, 0)

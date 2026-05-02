@@ -1,7 +1,11 @@
-[gd_scene format=3 uid="uid://d221rshqm7ott"]
+[gd_scene format=3 uid="uid://d35s0rs4l7ivg"]
 
 [ext_resource type="Theme" uid="uid://cjtgmcnr4asnk" path="res://assets/fonts/button.tres" id="1_a1car"]
 [ext_resource type="Script" uid="uid://byswgy7g0saac" path="res://scenes/components/perm_upgrades.gd" id="1_perm"]
+[ext_resource type="Shader" uid="uid://blshmg1ouxhc7" path="res://assets/art/ui/swirl_bg.gdshader" id="3_korwa"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dkphl"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="SystemFont" id="SystemFont_a1car"]
 
@@ -10,6 +14,24 @@
 [sub_resource type="SystemFont" id="SystemFont_dkphl"]
 
 [sub_resource type="SystemFont" id="SystemFont_yt7gv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wu84c"]
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 4
+border_color = Color(0.36078432, 0.36078432, 0.36078432, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8ln24"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="SystemFont" id="SystemFont_eb8wl"]
 
@@ -22,6 +44,22 @@
 [sub_resource type="SystemFont" id="SystemFont_ycl5e"]
 
 [sub_resource type="SystemFont" id="SystemFont_x144x"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yt7gv"]
+shader = ExtResource("3_korwa")
+shader_parameter/polar_coordinates = false
+shader_parameter/polar_center = Vector2(0.5, 0.5)
+shader_parameter/polar_zoom = 1.0
+shader_parameter/polar_repeat = 1.0
+shader_parameter/spin_rotation = 0.0
+shader_parameter/spin_speed = 10.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(0.52897936, 0, 0.22356668, 1)
+shader_parameter/colour_2 = Color(0, 0, 0, 1)
+shader_parameter/colour_3 = Color(0, 0, 0, 1)
+shader_parameter/contrast = 2.0
+shader_parameter/spin_amount = 0.36
+shader_parameter/pixel_filter = 700.0
 
 [node name="PermUpgrades" type="Control" unique_id=575185517]
 layout_mode = 3
@@ -63,13 +101,14 @@ offset_right = 170.0
 offset_bottom = 95.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dkphl")
 
 [node name="Margin" type="MarginContainer" parent="Root/Panel" unique_id=1830767734]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
 [node name="VBox" type="VBoxContainer" parent="Root/Panel/Margin" unique_id=1940481655]
 layout_mode = 2
@@ -106,7 +145,11 @@ text = "+5 Max HP per level"
 [node name="Buy" type="Button" parent="Root/Panel/Margin/VBox/Rows/HPRow" unique_id=758747854]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0.31701607, 0, 0.066697106, 1)
 theme_override_fonts/font = SubResource("SystemFont_yt7gv")
+theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Buy"
 
 [node name="CritRow" type="HBoxContainer" parent="Root/Panel/Margin/VBox/Rows" unique_id=890951235]
@@ -122,7 +165,11 @@ text = "+1% Crit Chance per level"
 [node name="Buy" type="Button" parent="Root/Panel/Margin/VBox/Rows/CritRow" unique_id=1400764327]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0.31764707, 0, 0.06666667, 1)
 theme_override_fonts/font = SubResource("SystemFont_rlxmn")
+theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Buy"
 
 [node name="SpeedRow" type="HBoxContainer" parent="Root/Panel/Margin/VBox/Rows" unique_id=834383610]
@@ -138,7 +185,11 @@ text = "+3% Move Speed per level"
 [node name="Buy" type="Button" parent="Root/Panel/Margin/VBox/Rows/SpeedRow" unique_id=881427531]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0.31764707, 0, 0.06666667, 1)
 theme_override_fonts/font = SubResource("SystemFont_hv3y6")
+theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Buy"
 
 [node name="Status" type="Label" parent="Root/Panel/Margin/VBox" unique_id=611792469]
@@ -152,9 +203,24 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0.31764707, 0, 0.06666667, 1)
 theme_override_fonts/font = SubResource("SystemFont_x144x")
 theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Back"
+
+[node name="ColorRect" type="ColorRect" parent="Root" unique_id=1679553288]
+z_index = -2
+material = SubResource("ShaderMaterial_yt7gv")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="pressed" from="Root/Panel/Margin/VBox/Rows/HPRow/Buy" to="." method="_on_buy_hp_pressed"]
 [connection signal="pressed" from="Root/Panel/Margin/VBox/Rows/CritRow/Buy" to="." method="_on_buy_crit_pressed"]

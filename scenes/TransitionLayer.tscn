@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://co0bnbp4sctjn"]
+
+[ext_resource type="Script" uid="uid://opy4f0a6ubso" path="res://scenes/transition_layer.gd" id="1_5nobb"]
+[ext_resource type="Shader" uid="uid://dggs0fpdotukg" path="res://assets/art/ui/smw_screen_transition.gdshader" id="2_m3i5u"]
+[ext_resource type="Texture2D" uid="uid://bw8awimg15rd7" path="res://assets/art/ui/istockphoto-1287471047-612x612.jpg" id="3_gjjrd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wae60"]
+shader = ExtResource("2_m3i5u")
+shader_parameter/luminance_cutoff = 0.0
+shader_parameter/invert = false
+shader_parameter/mask_texture = ExtResource("3_gjjrd")
+
+[node name="TransitionLayer" type="CanvasLayer" unique_id=1338795150]
+script = ExtResource("1_5nobb")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1314441263]
+material = SubResource("ShaderMaterial_wae60")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+metadata/_edit_use_anchors_ = true

@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 RunManager="*uid://dyrqsylnostkx"
 LevelLoader="*uid://bnj8v08t0uy5u"
+TransitionLayer="*uid://co0bnbp4sctjn"
 
 [display]
 

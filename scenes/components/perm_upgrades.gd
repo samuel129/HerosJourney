@@ -50,4 +50,7 @@ func _on_buy_speed_pressed() -> void:
 	_attempt_purchase("move_speed", "Purchased +3% permanent Move Speed.")
 
 func _on_back_pressed() -> void:
+	await TransitionLayer.play_out()
+	await get_tree().create_timer(0.3).timeout
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	await TransitionLayer.play_in()
