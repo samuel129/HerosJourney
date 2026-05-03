@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dv8mrtc1mate6"]
 
 [ext_resource type="Script" uid="uid://dmp0b4vewovwp" path="res://scripts/vendor_ui.gd" id="1_vendor"]
+[ext_resource type="Script" path="res://scripts/vendor_scene_art.gd" id="2_art"]
 
 [node name="VendorUI" type="CanvasLayer" unique_id=1918102728]
 layer = 4
@@ -8,13 +9,24 @@ visible = false
 script = ExtResource("1_vendor")
 
 [node name="Root" type="Control" parent="." unique_id=1379596755]
-texture_filter = 1
+texture_filter = 0
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="CampArt" type="Control" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_art")
+art_mode = "camp"
 
 [node name="Dim" type="ColorRect" parent="Root" unique_id=1943600911]
 layout_mode = 1
@@ -23,7 +35,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.58)
+mouse_filter = 2
+color = Color(0.02, 0.01, 0, 0.24)
 
 [node name="Panel" type="PanelContainer" parent="Root" unique_id=1865858834]
 layout_mode = 1
@@ -32,54 +45,87 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -160.0
-offset_top = -72.0
-offset_right = 160.0
-offset_bottom = 72.0
+offset_left = -158.0
+offset_top = -78.0
+offset_right = 158.0
+offset_bottom = 78.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Margin" type="MarginContainer" parent="Root/Panel" unique_id=1096511769]
 layout_mode = 2
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
+theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_bottom = 7
 
-[node name="VBox" type="VBoxContainer" parent="Root/Panel/Margin" unique_id=491069391]
+[node name="Layout" type="HBoxContainer" parent="Root/Panel/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Title" type="Label" parent="Root/Panel/Margin/VBox" unique_id=1626955272]
+[node name="ShopColumn" type="VBoxContainer" parent="Root/Panel/Margin/Layout"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="Root/Panel/Margin/Layout/ShopColumn" unique_id=1626955272]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "Wandering Vendor"
 horizontal_alignment = 1
 
-[node name="Gold" type="Label" parent="Root/Panel/Margin/VBox" unique_id=2079222959]
+[node name="Gold" type="Label" parent="Root/Panel/Margin/Layout/ShopColumn" unique_id=2079222959]
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
 text = "Gold: 0"
 horizontal_alignment = 1
 
-[node name="Offers" type="HBoxContainer" parent="Root/Panel/Margin/VBox" unique_id=186391215]
+[node name="Offers" type="HBoxContainer" parent="Root/Panel/Margin/Layout/ShopColumn" unique_id=186391215]
 layout_mode = 2
-theme_override_constants/separation = 6
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
 alignment = 1
 
-[node name="Status" type="Label" parent="Root/Panel/Margin/VBox" unique_id=1893641114]
+[node name="Status" type="Label" parent="Root/Panel/Margin/Layout/ShopColumn" unique_id=1893641114]
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
-text = "Spend gold now, or continue to the map."
+text = "Restock, patch up, then choose the road ahead."
 horizontal_alignment = 1
+autowrap_mode = 2
 
-[node name="Actions" type="HBoxContainer" parent="Root/Panel/Margin/VBox" unique_id=1049436278]
+[node name="Actions" type="HBoxContainer" parent="Root/Panel/Margin/Layout/ShopColumn" unique_id=1049436278]
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="Continue" type="Button" parent="Root/Panel/Margin/VBox/Actions" unique_id=1959979680]
-custom_minimum_size = Vector2(108, 24)
+[node name="Continue" type="Button" parent="Root/Panel/Margin/Layout/ShopColumn/Actions" unique_id=1959979680]
+custom_minimum_size = Vector2(112, 22)
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
-text = "Continue"
+text = "Open Route Map"
+
+[node name="TravelColumn" type="VBoxContainer" parent="Root/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(84, 0)
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="MapTitle" type="Label" parent="Root/Panel/Margin/Layout/TravelColumn"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Road Sketch"
+horizontal_alignment = 1
+
+[node name="MapPreview" type="Control" parent="Root/Panel/Margin/Layout/TravelColumn"]
+clip_contents = true
+custom_minimum_size = Vector2(84, 70)
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("2_art")
+art_mode = "map"
+
+[node name="MapCaption" type="Label" parent="Root/Panel/Margin/Layout/TravelColumn"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Vendor camp marks your next fork."
+horizontal_alignment = 1
+autowrap_mode = 2

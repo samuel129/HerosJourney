@@ -1,0 +1,95 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_grunt.gd" id="1_boss"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy_projectile.tscn" id="2_projectile"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(24, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(26, 32)
+
+[node name="BossPyromancer" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_boss")
+threat_tier = 2
+move_speed = 44.0
+chase_range = 280.0
+patrol_distance = 96.0
+max_health = 120
+attack_damage = 16
+attack_range = 24.0
+attack_vertical_range = 30.0
+attack_windup = 0.24
+attack_cooldown_time = 0.86
+enable_ranged_attack = true
+ranged_projectile_scene = ExtResource("2_projectile")
+ranged_attack_range = 280.0
+ranged_attack_min_range = 32.0
+ranged_attack_vertical_range = 96.0
+ranged_windup = 0.42
+ranged_cooldown_time = 1.3
+ranged_point_blank_chance = 0.45
+projectile_speed = 205.0
+projectile_damage = 15
+ranged_projectile_count = 3
+ranged_projectile_spread_degrees = 28.0
+xp_reward = 175
+gold_reward = 58
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.46, 0.08, 0.06, 1)
+polygon = PackedVector2Array(0, -21, 15, -8, 12, 17, -12, 17, -15, -8)
+
+[node name="RobeTrim" type="Polygon2D" parent="Body"]
+z_index = 1
+color = Color(0.96, 0.5, 0.12, 1)
+polygon = PackedVector2Array(-10, -6, 10, -6, 8, 13, -8, 13)
+
+[node name="Face" type="Polygon2D" parent="Body"]
+z_index = 2
+color = Color(0.16, 0.05, 0.03, 1)
+polygon = PackedVector2Array(-7, -15, 7, -15, 5, -9, -5, -9)
+
+[node name="EyeLeft" type="Polygon2D" parent="Body"]
+z_index = 3
+color = Color(1, 0.9, 0.34, 1)
+polygon = PackedVector2Array(-4, -13, 0, -13, -1, -11, -4, -11)
+
+[node name="EyeRight" type="Polygon2D" parent="Body"]
+z_index = 3
+color = Color(1, 0.9, 0.34, 1)
+polygon = PackedVector2Array(3, -13, 7, -13, 6, -11, 3, -11)
+
+[node name="FlameCrown" type="Polygon2D" parent="Body"]
+z_index = 3
+color = Color(1, 0.34, 0.08, 1)
+polygon = PackedVector2Array(-8, -18, -4, -29, 0, -20, 5, -31, 9, -18)
+
+[node name="InnerFlame" type="Polygon2D" parent="Body"]
+z_index = 4
+color = Color(1, 0.86, 0.18, 1)
+polygon = PackedVector2Array(-2, -20, 3, -27, 5, -18)
+
+[node name="CastingHand" type="Polygon2D" parent="Body"]
+z_index = 2
+color = Color(0.9, 0.42, 0.16, 1)
+polygon = PackedVector2Array(11, -2, 20, -4, 18, 4, 11, 5)
+
+[node name="FireOrb" type="Polygon2D" parent="Body"]
+z_index = 4
+color = Color(1, 0.58, 0.08, 1)
+polygon = PackedVector2Array(22, -8, 28, -2, 24, 5, 17, 2, 16, -5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="Hurtbox" type="Area2D" parent="."]

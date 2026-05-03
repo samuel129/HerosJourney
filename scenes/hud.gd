@@ -24,6 +24,7 @@ var levelup_panel: PanelContainer
 var levelup_title: Label
 var levelup_desc: Label
 var levelup_buttons: Array[Button] = []
+var levelup_swirl: ColorRect
 var pending_level: int = 1
 
 # Optional nicer popup animation bits (if you already added them elsewhere)
@@ -38,7 +39,7 @@ func _ready() -> void:
 	if crit_label == null:
 		crit_label = Label.new()
 		crit_label.text = "CRIT 0%"
-		var font = load("res://assets/fonts/04B_03__.TTF")
+		var font: FontFile = load("res://assets/fonts/04B_03__.TTF") as FontFile
 		crit_label.add_theme_font_override("font", font)
 		crit_label.add_theme_font_size_override("font_size", 8)
 		$Control/VBoxContainer.add_child(crit_label)
@@ -64,8 +65,8 @@ func set_exp(value: int, max_value: int) -> void:
 
 func show_level_up(new_level: int) -> void:
 	pending_level = new_level
-	levelup_title.text = "LEVEL UP!  (Level %d)" % new_level
-	levelup_desc.text = "Choose one upgrade:"
+	levelup_title.text = "RIFT SURGE"
+	levelup_desc.text = "Level %d reached. Choose a blessing." % new_level
 	levelup_panel.visible = true
 	if dimmer:
 		dimmer.visible = true
@@ -73,20 +74,20 @@ func show_level_up(new_level: int) -> void:
 	# Pause gameplay, keep UI responsive
 	get_tree().paused = true
 
-	# Optional: fade/scale in if you’re using tween + dimmer
 	if popup_tween and popup_tween.is_running():
 		popup_tween.kill()
 	levelup_panel.modulate = Color(1, 1, 1, 0)
-	levelup_panel.scale = Vector2(0.92, 0.92)
+	levelup_panel.pivot_offset = Vector2(142.0, 69.0)
+	levelup_panel.scale = Vector2(0.9, 0.9)
 	if dimmer:
-		dimmer.color = Color(0, 0, 0, 0.0)
+		dimmer.color = Color(0.01, 0.01, 0.04, 0.0)
 
 	popup_tween = create_tween()
 	popup_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	popup_tween.tween_property(levelup_panel, "modulate", Color(1, 1, 1, 1), 0.12)
-	popup_tween.parallel().tween_property(levelup_panel, "scale", Vector2(1, 1), 0.12)
+	popup_tween.tween_property(levelup_panel, "modulate", Color(1, 1, 1, 1), 0.16)
+	popup_tween.parallel().tween_property(levelup_panel, "scale", Vector2(1, 1), 0.16).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	if dimmer:
-		popup_tween.parallel().tween_property(dimmer, "color", Color(0, 0, 0, 0.55), 0.12)
+		popup_tween.parallel().tween_property(dimmer, "color", Color(0.01, 0.01, 0.04, 0.66), 0.16)
 
 # --- Smooth bar fill ---
 func _process(delta: float) -> void:
@@ -96,76 +97,169 @@ func _process(delta: float) -> void:
 
 # --- Popup UI creation (no .tscn changes needed) ---
 func _build_levelup_popup() -> void:
-	# Optional dim background
 	dimmer = ColorRect.new()
 	dimmer.visible = false
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
-	dimmer.color = Color(0, 0, 0, 0.0)
+	dimmer.color = Color(0.01, 0.01, 0.04, 0.0)
 	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(dimmer)
 
 	levelup_panel = PanelContainer.new()
 	levelup_panel.visible = false
 	levelup_panel.process_mode = Node.PROCESS_MODE_ALWAYS
+	levelup_panel.add_theme_stylebox_override("panel", _make_levelup_panel_style())
 	add_child(levelup_panel)
 
-	# Center it
 	levelup_panel.anchor_left = 0.5
 	levelup_panel.anchor_right = 0.5
 	levelup_panel.anchor_top = 0.5
 	levelup_panel.anchor_bottom = 0.5
-	levelup_panel.offset_left = -200
-	levelup_panel.offset_right = 200
-	levelup_panel.offset_top = -40
-	levelup_panel.offset_bottom = 40
+	levelup_panel.offset_left = -148
+	levelup_panel.offset_right = 148
+	levelup_panel.offset_top = -72
+	levelup_panel.offset_bottom = 72
 	levelup_panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	levelup_panel.grow_vertical = Control.GROW_DIRECTION_BOTH
-	
-	var root_vbox := VBoxContainer.new()
-	root_vbox.add_theme_constant_override("separation", 10)
-	levelup_panel.add_child(root_vbox)
-	
-	var font = load("res://assets/fonts/04B_03__.TTF")
+
+	var content_root: Control = Control.new()
+	content_root.clip_contents = true
+	levelup_panel.add_child(content_root)
+
+	levelup_swirl = ColorRect.new()
+	levelup_swirl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	levelup_swirl.color = Color(1, 1, 1, 1)
+	levelup_swirl.material = _make_levelup_swirl_material()
+	levelup_swirl.set_anchors_preset(Control.PRESET_FULL_RECT)
+	content_root.add_child(levelup_swirl)
+
+	var veil: ColorRect = ColorRect.new()
+	veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	veil.color = Color(0.0, 0.0, 0.06, 0.42)
+	veil.set_anchors_preset(Control.PRESET_FULL_RECT)
+	content_root.add_child(veil)
+
+	var top_glow: ColorRect = ColorRect.new()
+	top_glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	top_glow.color = Color(0.24, 0.78, 1.0, 0.22)
+	top_glow.anchor_right = 1.0
+	top_glow.offset_bottom = 3.0
+	content_root.add_child(top_glow)
+
+	var margin: MarginContainer = MarginContainer.new()
+	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 12)
+	margin.add_theme_constant_override("margin_top", 10)
+	margin.add_theme_constant_override("margin_right", 12)
+	margin.add_theme_constant_override("margin_bottom", 10)
+	content_root.add_child(margin)
+
+	var root_vbox: VBoxContainer = VBoxContainer.new()
+	root_vbox.add_theme_constant_override("separation", 5)
+	margin.add_child(root_vbox)
+
+	var font: FontFile = load("res://assets/fonts/04B_03__.TTF") as FontFile
 
 	levelup_title = Label.new()
-	levelup_title.text = "LEVEL UP!"
+	levelup_title.text = "RIFT SURGE"
 	levelup_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	levelup_title.add_theme_font_override("font", font)
-	levelup_title.add_theme_font_size_override("font_size", 8)
+	levelup_title.add_theme_font_size_override("font_size", 16)
+	levelup_title.add_theme_color_override("font_color", Color(0.74, 0.94, 1.0, 1.0))
+	levelup_title.add_theme_color_override("font_shadow_color", Color(0.0, 0.03, 0.16, 1.0))
+	levelup_title.add_theme_constant_override("shadow_offset_x", 1)
+	levelup_title.add_theme_constant_override("shadow_offset_y", 2)
 	root_vbox.add_child(levelup_title)
 
 	levelup_desc = Label.new()
-	levelup_desc.text = "Choose one upgrade:"
+	levelup_desc.text = "Choose a blessing."
 	levelup_desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	levelup_desc.add_theme_font_override("font", font)
 	levelup_desc.add_theme_font_size_override("font_size", 8)
+	levelup_desc.add_theme_color_override("font_color", Color(0.89, 0.96, 1.0, 1.0))
 	root_vbox.add_child(levelup_desc)
 
-	var btn_row := HBoxContainer.new()
-	btn_row.add_theme_constant_override("separation", 4)
+	var divider: ColorRect = ColorRect.new()
+	divider.color = Color(0.18, 0.66, 1.0, 0.72)
+	divider.custom_minimum_size = Vector2(0, 2)
+	root_vbox.add_child(divider)
+
+	var btn_row: HBoxContainer = HBoxContainer.new()
+	btn_row.add_theme_constant_override("separation", 8)
 	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	root_vbox.add_child(btn_row)
 
-	# 3 upgrade buttons
 	for i in range(3):
-		var b := Button.new()
-		b.custom_minimum_size = Vector2(80, 16)
-		b.text = "Upgrade %d" % (i + 1)
+		var b: Button = Button.new()
+		b.custom_minimum_size = Vector2(82, 48)
 		b.add_theme_font_override("font", font)
 		b.add_theme_font_size_override("font_size", 8)
+		b.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_style_levelup_button(b)
 		btn_row.add_child(b)
 		levelup_buttons.append(b)
 
-		# IMPORTANT: capture the index so each button calls the right choice
-		var idx := i
+		var idx: int = i
 		b.pressed.connect(func(): _on_upgrade_chosen(idx))
 
 	_refresh_upgrade_text()
-	
+
 func _refresh_upgrade_text() -> void:
-	levelup_buttons[0].text = "+10 Max HP"
-	levelup_buttons[1].text = "+10% Move Speed"
-	levelup_buttons[2].text = "+5% Critical Chance"
+	levelup_buttons[0].text = "VITAL\n+10 Max HP"
+	levelup_buttons[1].text = "SWIFT\n+10% Speed"
+	levelup_buttons[2].text = "LUCK\n+5% Crit"
+
+func _make_levelup_swirl_material() -> ShaderMaterial:
+	var material: ShaderMaterial = ShaderMaterial.new()
+	var shader_resource: Shader = load("res://assets/art/ui/swirl_bg.gdshader") as Shader
+	if shader_resource != null:
+		material.shader = shader_resource
+		material.set_shader_parameter("spin_speed", 4.0)
+		material.set_shader_parameter("spin_amount", 0.58)
+		material.set_shader_parameter("contrast", 2.4)
+		material.set_shader_parameter("pixel_filter", 520.0)
+		material.set_shader_parameter("colour_1", Color(0.02, 0.05, 0.55, 1.0))
+		material.set_shader_parameter("colour_2", Color(0.0, 0.0, 0.035, 1.0))
+		material.set_shader_parameter("colour_3", Color(0.28, 0.78, 1.0, 1.0))
+	return material
+
+func _make_levelup_panel_style() -> StyleBoxFlat:
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = Color(0.01, 0.02, 0.09, 0.96)
+	style.border_color = Color(0.28, 0.78, 1.0, 1.0)
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(8)
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.45)
+	style.shadow_size = 8
+	style.shadow_offset = Vector2(0, 4)
+	style.content_margin_left = 0
+	style.content_margin_top = 0
+	style.content_margin_right = 0
+	style.content_margin_bottom = 0
+	return style
+
+func _style_levelup_button(button: Button) -> void:
+	button.add_theme_stylebox_override("normal", _make_levelup_button_style(Color(0.02, 0.08, 0.20, 0.90), Color(0.25, 0.66, 1.0, 0.80)))
+	button.add_theme_stylebox_override("hover", _make_levelup_button_style(Color(0.06, 0.18, 0.36, 0.96), Color(0.82, 0.94, 1.0, 1.0)))
+	button.add_theme_stylebox_override("pressed", _make_levelup_button_style(Color(0.03, 0.10, 0.24, 1.0), Color(1.0, 0.82, 0.36, 1.0)))
+	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	button.add_theme_color_override("font_color", Color(0.88, 0.97, 1.0, 1.0))
+	button.add_theme_color_override("font_hover_color", Color(1.0, 0.96, 0.72, 1.0))
+	button.add_theme_color_override("font_pressed_color", Color(0.76, 0.93, 1.0, 1.0))
+	button.add_theme_color_override("font_shadow_color", Color(0.0, 0.02, 0.08, 1.0))
+	button.add_theme_constant_override("shadow_offset_x", 1)
+	button.add_theme_constant_override("shadow_offset_y", 1)
+
+func _make_levelup_button_style(fill_color: Color, border_color: Color) -> StyleBoxFlat:
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = fill_color
+	style.border_color = border_color
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(5)
+	style.content_margin_left = 5
+	style.content_margin_top = 5
+	style.content_margin_right = 5
+	style.content_margin_bottom = 5
+	return style
 
 # --- Apply upgrades ---
 func _on_upgrade_chosen(choice: int) -> void:
@@ -179,11 +273,10 @@ func _on_upgrade_chosen(choice: int) -> void:
 	popup_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 
 	popup_tween.tween_property(levelup_panel, "modulate", Color(1, 1, 1, 0), 0.12)
-	popup_tween.parallel().tween_property(levelup_panel, "scale", Vector2(0.92, 0.92), 0.12)
+	popup_tween.parallel().tween_property(levelup_panel, "scale", Vector2(0.9, 0.9), 0.12)
 	if dimmer:
-		popup_tween.parallel().tween_property(dimmer, "color", Color(0, 0, 0, 0.0), 0.12)
+		popup_tween.parallel().tween_property(dimmer, "color", Color(0.01, 0.01, 0.04, 0.0), 0.12)
 
-	# ✅ FIXED: func(): (no space)
 	popup_tween.finished.connect(func():
 		levelup_panel.visible = false
 		if dimmer:
@@ -216,7 +309,7 @@ func _apply_upgrade(choice: int) -> void:
 
 		2:
 			# +5% Critical Chance
-			var current := 0.0
+			var current: float = 0.0
 			if player_ref.has_meta("crit_chance"):
 				current = float(player_ref.get_meta("crit_chance"))
 

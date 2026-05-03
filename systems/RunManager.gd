@@ -81,14 +81,15 @@ const NODE_PROFILES = [
 ]
 const MINI_BOSS_PROFILE = {
 	"id": "path_miniboss",
-	"title": "Mini-Boss Arena",
-	"description": "A dangerous champion blocks your path.",
+	"title": "Boss Arena",
+	"description": "A unique boss blocks your path.",
 	"weight": 0.0,
 	"chunk_offset": -1,
 	"enemy_multiplier": 0.0,
 	"gold_reward": 45,
 	"heal_percent": 0.0,
-	"stage_type": "mini_boss",
+	"stage_type": "boss",
+	"boss_stage": true,
 	"mini_boss_stage": true,
 }
 
@@ -469,6 +470,7 @@ func _build_level_config_from_profile(profile: Dictionary, stage: int) -> Dictio
 		"theme_row": -1,
 		"enemy_multiplier": enemy_multiplier,
 		"stage_type": String(profile.get("stage_type", "normal")),
+		"boss_stage": bool(profile.get("boss_stage", false)),
 		"mini_boss_stage": bool(profile.get("mini_boss_stage", false)),
 		"node_type": String(profile.get("id", "path_combat")),
 		"display_name": String(profile.get("title", "Route")),

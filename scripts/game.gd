@@ -11,6 +11,9 @@ extends Node2D
 @export var enemy_ranger_scene: PackedScene
 @export var enemy_brute_scene: PackedScene
 @export var mini_boss_enemy_scene: PackedScene
+@export var boss_blade_scene: PackedScene
+@export var boss_pyromancer_scene: PackedScene
+@export var boss_guardian_scene: PackedScene
 @export var portal_scene: PackedScene
 var current_level: Node = null
 var active_enemies: Array[Node] = []
@@ -59,6 +62,12 @@ func _ready() -> void:
 		enemy_brute_scene = load("res://scenes/enemies/enemy_brute.tscn")
 	if mini_boss_enemy_scene == null:
 		mini_boss_enemy_scene = load("res://scenes/enemies/enemy_mini_boss.tscn")
+	if boss_blade_scene == null:
+		boss_blade_scene = load("res://scenes/enemies/boss_blade_champion.tscn")
+	if boss_pyromancer_scene == null:
+		boss_pyromancer_scene = load("res://scenes/enemies/boss_pyromancer.tscn")
+	if boss_guardian_scene == null:
+		boss_guardian_scene = load("res://scenes/enemies/boss_guardian.tscn")
 	if portal_scene == null:
 		portal_scene = load("res://scenes/portal_anim.tscn")
 
@@ -142,7 +151,7 @@ func spawn_enemies_for_chunks() -> void:
 		return
 
 	if _is_mini_boss_level():
-		#_spawn_mini_boss_for_level(_extract_markers_from_entries(spawn_entries))
+		_spawn_boss_for_level(_extract_markers_from_entries(spawn_entries))
 		return
 
 	for entry in spawn_entries:
@@ -223,9 +232,15 @@ func _is_mini_boss_level() -> bool:
 	if current_level == null or not current_level.has_meta("level_config"):
 		return false
 	var cfg: Dictionary = current_level.get_meta("level_config") as Dictionary
-	return bool(cfg.get("mini_boss_stage", false))
+	return bool(cfg.get("boss_stage", false)) or bool(cfg.get("mini_boss_stage", false))
 
 func _spawn_mini_boss_for_level(spawn_markers: Array[Marker2D]) -> void:
+	_spawn_boss_for_level(spawn_markers)
+
+func _spawn_boss_for_level(spawn_markers: Array[Marker2D]) -> void:
+	if spawn_markers.is_empty():
+		return
+
 	var boss_marker: Marker2D = spawn_markers[0]
 	var max_distance_sq: float = -1.0
 	for marker in spawn_markers:
@@ -235,16 +250,56 @@ func _spawn_mini_boss_for_level(spawn_markers: Array[Marker2D]) -> void:
 			boss_marker = marker
 
 	var stage_scale: float = 1.0 + (float(max(current_stage - 1, 0)) * 0.18)
-	var mini_boss_config: Dictionary = {
+	var boss_profile: Dictionary = _get_boss_profile_for_stage()
+	var boss_scene_value: Variant = boss_profile.get("scene", mini_boss_enemy_scene)
+	var boss_scene: PackedScene = boss_scene_value as PackedScene
+	if boss_scene == null:
+		boss_scene = mini_boss_enemy_scene
+
+	var boss_config: Dictionary = {
 		"mini_boss": true,
-		"max_health": int(round(90.0 * stage_scale)),
-		"attack_damage": int(round(16.0 + current_stage * 2.0)),
-		"move_speed": 48.0 + (float(current_stage) * 2.0),
-		"projectile_damage": int(round(10.0 + current_stage * 1.8)),
-		"xp_reward": int(round(120.0 * stage_scale)),
-		"gold_reward": int(round(35.0 * stage_scale)),
+		"max_health": int(round(float(boss_profile.get("health", 110.0)) * stage_scale)),
+		"attack_damage": int(round(float(boss_profile.get("damage", 16.0)) + float(current_stage) * 2.0)),
+		"move_speed": float(boss_profile.get("speed", 48.0)) + (float(current_stage) * 1.4),
+		"projectile_damage": int(round(float(boss_profile.get("projectile_damage", 10.0)) + float(current_stage) * 1.8)),
+		"xp_reward": int(round(float(boss_profile.get("xp", 130.0)) * stage_scale)),
+		"gold_reward": int(round(float(boss_profile.get("gold", 40.0)) * stage_scale)),
 	}
-	_spawn_single_enemy(boss_marker.global_position, mini_boss_config, mini_boss_enemy_scene)
+	_spawn_single_enemy(boss_marker.global_position, boss_config, boss_scene)
+
+func _get_boss_profile_for_stage() -> Dictionary:
+	var boss_cycle_index: int = maxi(int(floor(float(current_stage) / 3.0)) - 1, 0) % 3
+	match boss_cycle_index:
+		0:
+			return {
+				"scene": boss_blade_scene,
+				"health": 120.0,
+				"damage": 18.0,
+				"speed": 58.0,
+				"projectile_damage": 8.0,
+				"xp": 135.0,
+				"gold": 42.0,
+			}
+		1:
+			return {
+				"scene": boss_pyromancer_scene,
+				"health": 105.0,
+				"damage": 15.0,
+				"speed": 44.0,
+				"projectile_damage": 14.0,
+				"xp": 145.0,
+				"gold": 48.0,
+			}
+		_:
+			return {
+				"scene": boss_guardian_scene,
+				"health": 155.0,
+				"damage": 22.0,
+				"speed": 34.0,
+				"projectile_damage": 11.0,
+				"xp": 160.0,
+				"gold": 55.0,
+			}
 
 func _spawn_enemies_from_entry(entry: Dictionary, enemy_multiplier: float) -> void:
 	if enemy_multiplier <= 0.0:
@@ -477,7 +532,7 @@ func _spawn_stage_portal() -> void:
 
 func _get_stage_portal_position() -> Vector2:
 	if current_level == null: return player_spawn_position + Vector2(220, -24)
-	var portal_spawn := current_level.find_child("PortalSpawn", true, false) as Marker2D
+	var portal_spawn: Marker2D = current_level.find_child("PortalSpawn", true, false) as Marker2D
 	if portal_spawn: return portal_spawn.global_position
 	return player_spawn_position + Vector2(220, -24)
 

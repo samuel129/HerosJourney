@@ -25,8 +25,43 @@ xp_reward = 44
 gold_reward = 11
 
 [node name="Body" type="Polygon2D" parent="." unique_id=336742338]
-color = Color(0.42, 0.2, 0.08, 1)
-polygon = PackedVector2Array(-11, -13, 11, -13, 11, 13, -11, 13)
+color = Color(0.34, 0.17, 0.08, 1)
+polygon = PackedVector2Array(-13, -10, -8, -17, 8, -17, 14, -9, 13, 13, -13, 13)
+
+[node name="Helmet" type="Polygon2D" parent="Body"]
+z_index = 1
+color = Color(0.56, 0.36, 0.18, 1)
+polygon = PackedVector2Array(-11, -18, 10, -18, 14, -11, 8, -7, -9, -7, -14, -12)
+
+[node name="HornLeft" type="Polygon2D" parent="Body"]
+z_index = 1
+color = Color(0.82, 0.74, 0.52, 1)
+polygon = PackedVector2Array(-10, -17, -19, -21, -13, -12)
+
+[node name="HornRight" type="Polygon2D" parent="Body"]
+z_index = 1
+color = Color(0.82, 0.74, 0.52, 1)
+polygon = PackedVector2Array(9, -17, 19, -21, 13, -12)
+
+[node name="EyeLeft" type="Polygon2D" parent="Body"]
+z_index = 2
+color = Color(1, 0.36, 0.22, 1)
+polygon = PackedVector2Array(-5, -13, 0, -13, -1, -11, -5, -11)
+
+[node name="EyeRight" type="Polygon2D" parent="Body"]
+z_index = 2
+color = Color(1, 0.36, 0.22, 1)
+polygon = PackedVector2Array(3, -13, 8, -13, 7, -11, 3, -11)
+
+[node name="ArmorPlate" type="Polygon2D" parent="Body"]
+z_index = 2
+color = Color(0.21, 0.12, 0.08, 1)
+polygon = PackedVector2Array(-10, -4, 10, -4, 9, 8, -9, 8)
+
+[node name="Club" type="Polygon2D" parent="Body"]
+z_index = 1
+color = Color(0.48, 0.28, 0.12, 1)
+polygon = PackedVector2Array(12, -3, 22, -7, 25, 4, 15, 8)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1818328247]
 shape = SubResource("RectangleShape2D_body")

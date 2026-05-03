@@ -3,11 +3,13 @@ class_name VendorUI
 
 signal vendor_closed
 
-@onready var stage_label: Label = $Root/Panel/Margin/VBox/Title
-@onready var gold_label: Label = $Root/Panel/Margin/VBox/Gold
-@onready var offers_row: HBoxContainer = $Root/Panel/Margin/VBox/Offers
-@onready var status_label: Label = $Root/Panel/Margin/VBox/Status
-@onready var continue_button: Button = $Root/Panel/Margin/VBox/Actions/Continue
+@onready var stage_label: Label = $Root/Panel/Margin/Layout/ShopColumn/Title
+@onready var panel: PanelContainer = $Root/Panel
+@onready var gold_label: Label = $Root/Panel/Margin/Layout/ShopColumn/Gold
+@onready var offers_row: HBoxContainer = $Root/Panel/Margin/Layout/ShopColumn/Offers
+@onready var status_label: Label = $Root/Panel/Margin/Layout/ShopColumn/Status
+@onready var continue_button: Button = $Root/Panel/Margin/Layout/ShopColumn/Actions/Continue
+@onready var map_caption_label: Label = $Root/Panel/Margin/Layout/TravelColumn/MapCaption
 
 const OFFER_POOL: Array[Dictionary] = [
 	{
@@ -95,6 +97,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 	_rng.randomize()
+	_style_panel()
+	_style_continue_button()
 	if not continue_button.pressed.is_connected(_on_continue_pressed):
 		continue_button.pressed.connect(_on_continue_pressed)
 
@@ -104,7 +108,8 @@ func open_vendor(stage: int) -> void:
 	_offers = _build_offers_for_stage(_current_stage)
 	_rebuild_offer_buttons()
 	_refresh_header()
-	status_label.text = "Spend gold now, or continue to the map."
+	status_label.text = "Restock, patch up, then choose the road ahead."
+	map_caption_label.text = "Stage %d cleared. The next fork waits beyond camp." % _current_stage
 	visible = true
 	_is_open = true
 	get_tree().paused = true
@@ -156,11 +161,12 @@ func _rebuild_offer_buttons() -> void:
 	for idx in range(_offers.size()):
 		var offer: Dictionary = _offers[idx]
 		var button: Button = Button.new()
-		button.custom_minimum_size = Vector2(96, 72)
+		button.custom_minimum_size = Vector2(64, 70)
 		button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		button.focus_mode = Control.FOCUS_ALL
 		button.add_theme_font_size_override("font_size", 8)
 		button.text = _format_offer_text(offer)
+		_style_offer_button(button)
 		button.pressed.connect(_on_offer_pressed.bind(idx))
 		offers_row.add_child(button)
 		_offer_buttons.append(button)
@@ -254,7 +260,7 @@ func _seed_vendor_rng(stage: int) -> void:
 	_rng.seed = seed_value
 
 func _refresh_header() -> void:
-	stage_label.text = "Wandering Vendor - Stage %d Clear" % _current_stage
+	stage_label.text = "Vendor Camp - Stage %d Clear" % _current_stage
 	var gold: int = 0
 	if RunManager.run_data != null:
 		gold = int(RunManager.run_data.resources.get("gold", 0))
@@ -273,7 +279,116 @@ func _refresh_offer_button_states() -> void:
 			button.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 func _format_offer_text(offer: Dictionary) -> String:
-	var title: String = String(offer.get("title", "Offer"))
-	var description: String = String(offer.get("description", ""))
+	var title: String = _shorten_title(String(offer.get("title", "Offer")))
+	var description: String = _shorten_description(String(offer.get("id", "")), String(offer.get("description", "")))
 	var cost: int = int(offer.get("cost", 0))
 	return "%s\n%s\n%d Gold" % [title, description, cost]
+
+func _shorten_title(title: String) -> String:
+	match title:
+		"Field Rations":
+			return "Field\nRations"
+		"Sharpening Stone":
+			return "Sharpen\nStone"
+		"Vital Charm":
+			return "Vital\nCharm"
+		"Lucky Charm":
+			return "Lucky\nCharm"
+		"Keen Edge":
+			return "Keen\nEdge"
+		"Fleet Boots":
+			return "Fleet\nBoots"
+		"Sky Sigil":
+			return "Sky\nSigil"
+		"Blessed Flask":
+			return "Blessed\nFlask"
+		"Rune Plating":
+			return "Rune\nPlate"
+		"War Banner":
+			return "War\nBanner"
+		"Hunter's Oath":
+			return "Hunter\nOath"
+		"Camp Rest":
+			return "Camp\nRest"
+	return title
+
+func _shorten_description(offer_id: String, description: String) -> String:
+	match offer_id:
+		"offer_heal":
+			return "Heal 35%"
+		"offer_attack":
+			return "+3 ATK"
+		"offer_max_health":
+			return "+12 Max HP"
+		"offer_crit":
+			return "+3% Crit"
+		"offer_crit_damage":
+			return "+20% CDmg"
+		"offer_move_speed":
+			return "+8% Speed"
+		"offer_jump_power":
+			return "+8% Jump"
+		"offer_full_heal":
+			return "Full Heal"
+		"offer_armor":
+			return "+2 DEF"
+		"offer_attack_big":
+			return "+5 ATK"
+		"offer_crit_big":
+			return "+6% Crit"
+		"offer_discount_heal":
+			return "Heal 20%"
+	return description
+
+func _style_panel() -> void:
+	panel.add_theme_stylebox_override("panel", _make_panel_style())
+
+func _style_offer_button(button: Button) -> void:
+	button.add_theme_stylebox_override("normal", _make_button_style(Color(0.18, 0.12, 0.08, 0.94), Color(0.72, 0.43, 0.18, 1.0)))
+	button.add_theme_stylebox_override("hover", _make_button_style(Color(0.28, 0.18, 0.1, 0.98), Color(0.95, 0.68, 0.3, 1.0)))
+	button.add_theme_stylebox_override("pressed", _make_button_style(Color(0.11, 0.08, 0.06, 1.0), Color(1.0, 0.8, 0.36, 1.0)))
+	button.add_theme_stylebox_override("focus", _make_button_style(Color(0.22, 0.15, 0.09, 0.98), Color(1.0, 0.84, 0.38, 1.0)))
+	button.add_theme_stylebox_override("disabled", _make_button_style(Color(0.12, 0.18, 0.12, 0.9), Color(0.44, 0.72, 0.36, 1.0)))
+	button.add_theme_color_override("font_color", Color(0.96, 0.86, 0.63, 1.0))
+	button.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.76, 1.0))
+	button.add_theme_color_override("font_focus_color", Color(1.0, 0.95, 0.76, 1.0))
+	button.add_theme_color_override("font_disabled_color", Color(0.74, 0.92, 0.66, 1.0))
+
+func _style_continue_button() -> void:
+	continue_button.add_theme_stylebox_override("normal", _make_button_style(Color(0.16, 0.27, 0.23, 0.96), Color(0.4, 0.76, 0.58, 1.0)))
+	continue_button.add_theme_stylebox_override("hover", _make_button_style(Color(0.2, 0.37, 0.31, 1.0), Color(0.65, 0.96, 0.74, 1.0)))
+	continue_button.add_theme_stylebox_override("pressed", _make_button_style(Color(0.09, 0.18, 0.16, 1.0), Color(0.83, 1.0, 0.78, 1.0)))
+	continue_button.add_theme_stylebox_override("focus", _make_button_style(Color(0.2, 0.37, 0.31, 1.0), Color(0.83, 1.0, 0.78, 1.0)))
+	continue_button.add_theme_color_override("font_color", Color(0.9, 1.0, 0.82, 1.0))
+
+func _make_button_style(fill_color: Color, border_color: Color) -> StyleBoxFlat:
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = fill_color
+	style.border_color = border_color
+	style.border_width_left = 1
+	style.border_width_top = 1
+	style.border_width_right = 1
+	style.border_width_bottom = 1
+	style.corner_radius_top_left = 3
+	style.corner_radius_top_right = 3
+	style.corner_radius_bottom_left = 3
+	style.corner_radius_bottom_right = 3
+	style.content_margin_left = 3.0
+	style.content_margin_top = 3.0
+	style.content_margin_right = 3.0
+	style.content_margin_bottom = 3.0
+	return style
+
+func _make_panel_style() -> StyleBoxFlat:
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = Color(0.09, 0.07, 0.055, 0.78)
+	style.border_color = Color(0.68, 0.43, 0.2, 1.0)
+	style.border_width_left = 1
+	style.border_width_top = 1
+	style.border_width_right = 1
+	style.border_width_bottom = 1
+	style.corner_radius_top_left = 5
+	style.corner_radius_top_right = 5
+	style.corner_radius_bottom_left = 5
+	style.corner_radius_bottom_right = 5
+	return style

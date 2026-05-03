@@ -10,8 +10,28 @@ collision_layer = 3
 script = ExtResource("1_u5q7v")
 
 [node name="Body" type="Polygon2D" parent="." unique_id=250767738]
-color = Color(0.55, 0.12, 0.12, 1)
-polygon = PackedVector2Array(-8, -10, 8, -10, 8, 10, -8, 10)
+color = Color(0.46, 0.12, 0.1, 1)
+polygon = PackedVector2Array(-7, -7, -3, -13, 5, -12, 9, -5, 7, 10, -7, 10, -10, -3)
+
+[node name="Head" type="Polygon2D" parent="Body"]
+z_index = 1
+color = Color(0.66, 0.18, 0.13, 1)
+polygon = PackedVector2Array(-5, -16, 5, -16, 7, -10, 3, -6, -5, -7, -8, -11)
+
+[node name="Eye" type="Polygon2D" parent="Body"]
+z_index = 2
+color = Color(1, 0.86, 0.36, 1)
+polygon = PackedVector2Array(1, -13, 5, -13, 4, -11, 1, -11)
+
+[node name="Claws" type="Polygon2D" parent="Body"]
+z_index = 1
+color = Color(0.88, 0.72, 0.42, 1)
+polygon = PackedVector2Array(7, 0, 13, 2, 7, 4)
+
+[node name="Belt" type="Polygon2D" parent="Body"]
+z_index = 2
+color = Color(0.16, 0.08, 0.06, 1)
+polygon = PackedVector2Array(-8, 2, 8, 3, 7, 6, -8, 5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=748583158]
 shape = SubResource("RectangleShape2D_d6g1j")

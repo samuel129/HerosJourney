@@ -28,6 +28,8 @@ enum ThreatTier {
 @export_range(0.0, 1.0, 0.01) var ranged_point_blank_chance: float = 0.2
 @export var projectile_speed: float = 170.0
 @export var projectile_damage: int = 10
+@export var ranged_projectile_count: int = 1
+@export var ranged_projectile_spread_degrees: float = 0.0
 
 # Rewards
 @export var xp_reward: int = -1
@@ -65,7 +67,7 @@ func _ready() -> void:
 	_update_health_bar()
 
 func _ensure_health_component() -> void:
-	var existing := get_node_or_null("HealthComponent") as HealthComponent
+	var existing: HealthComponent = get_node_or_null("HealthComponent") as HealthComponent
 	if existing:
 		health_component = existing
 	else:
@@ -103,7 +105,7 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 
-	var player := get_tree().get_first_node_in_group("player") as Node2D
+	var player: Node2D = get_tree().get_first_node_in_group("player") as Node2D
 
 	target_player = player
 	var target_direction: float = float(facing)
@@ -183,7 +185,7 @@ func _perform_attack() -> void:
 		target_player.receive_damage(attack_damage)
 		return
 
-	var player_health := target_player.get_node_or_null("HealthComponent") as HealthComponent
+	var player_health: HealthComponent = target_player.get_node_or_null("HealthComponent") as HealthComponent
 	if player_health and player_health.has_method("take_damage"):
 		player_health.take_damage(attack_damage)
 
@@ -211,13 +213,22 @@ func _perform_ranged_attack() -> void:
 		if candidate_direction.length_squared() > 0.0001:
 			direction_to_target = candidate_direction.normalized()
 
-	var projectile: Node = ranged_projectile_scene.instantiate()
-	parent_node.add_child(projectile)
-	if projectile is Node2D:
-		(projectile as Node2D).global_position = spawn_position_local
+	var projectile_count: int = maxi(ranged_projectile_count, 1)
+	var spread_radians: float = deg_to_rad(ranged_projectile_spread_degrees)
+	for projectile_index in range(projectile_count):
+		var shot_direction: Vector2 = direction_to_target
+		if projectile_count > 1:
+			var spread_alpha: float = 0.0 if projectile_count <= 1 else float(projectile_index) / float(projectile_count - 1)
+			var angle_offset: float = lerpf(-spread_radians * 0.5, spread_radians * 0.5, spread_alpha)
+			shot_direction = direction_to_target.rotated(angle_offset)
 
-	if projectile.has_method("launch"):
-		projectile.call("launch", direction_to_target, projectile_speed, projectile_damage, self)
+		var projectile: Node = ranged_projectile_scene.instantiate()
+		parent_node.add_child(projectile)
+		if projectile is Node2D:
+			(projectile as Node2D).global_position = spawn_position_local
+
+		if projectile.has_method("launch"):
+			projectile.call("launch", shot_direction, projectile_speed, projectile_damage, self)
 
 func _can_use_ranged_attack(dx: float, dy: float) -> bool:
 	if not enable_ranged_attack:
@@ -233,6 +244,8 @@ func _can_use_ranged_attack(dx: float, dy: float) -> bool:
 		return false
 	if absf(dy) > ranged_attack_vertical_range:
 		return false
+	if not _has_clear_ranged_line_of_sight():
+		return false
 	return true
 
 func _should_use_ranged_in_melee() -> bool:
@@ -242,7 +255,23 @@ func _should_use_ranged_in_melee() -> bool:
 		return false
 	if ranged_cooldown > 0.0:
 		return false
+	if not _has_clear_ranged_line_of_sight():
+		return false
 	return randf() < ranged_point_blank_chance
+
+func _has_clear_ranged_line_of_sight() -> bool:
+	if target_player == null or not is_instance_valid(target_player):
+		return false
+
+	var shot_origin: Vector2 = global_position + Vector2(float(facing) * 14.0, -6.0)
+	var query: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(shot_origin, target_player.global_position)
+	query.collision_mask = 1
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	query.exclude = [get_rid()]
+
+	var hit: Dictionary = get_world_2d().direct_space_state.intersect_ray(query)
+	return hit.is_empty()
 
 func _cache_base_body_color() -> void:
 	var body_node: Node = get_node_or_null("Body")
@@ -266,20 +295,30 @@ func _get_patrol_direction() -> float:
 	return float(facing)
 
 func _setup_health_bar() -> void:
+	var bar_width: float = 24.0
+	var bar_y: float = -22.0
+	match threat_tier:
+		ThreatTier.MINI_BOSS:
+			bar_width = 38.0
+			bar_y = -34.0
+		ThreatTier.BOSS:
+			bar_width = 54.0
+			bar_y = -44.0
+
 	health_bar = ProgressBar.new()
 	health_bar.min_value = 0
 	health_bar.max_value = max_health
 	health_bar.value = max_health
-	health_bar.custom_minimum_size = Vector2(24, 4)
+	health_bar.custom_minimum_size = Vector2(bar_width, 4)
 	health_bar.show_percentage = false
 	health_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	health_bar.position = Vector2(-12, -22)
+	health_bar.position = Vector2(-bar_width * 0.5, bar_y)
 
-	var bg_style := StyleBoxFlat.new()
+	var bg_style: StyleBoxFlat = StyleBoxFlat.new()
 	bg_style.bg_color = Color(0.12, 0.12, 0.12, 0.85)
 	health_bar.add_theme_stylebox_override("background", bg_style)
 
-	var fg_style := StyleBoxFlat.new()
+	var fg_style: StyleBoxFlat = StyleBoxFlat.new()
 	fg_style.bg_color = Color(0.9, 0.2, 0.2, 1.0)
 	health_bar.add_theme_stylebox_override("fill", fg_style)
 
@@ -304,11 +343,11 @@ func _on_died() -> void:
 	queue_free()
 
 func _award_rewards() -> void:
-	var player := get_tree().get_first_node_in_group("player")
+	var player: Node = get_tree().get_first_node_in_group("player")
 	if player == null:
 		return
 
-	var xp_component := player.get_node_or_null("ExperienceComponent")
+	var xp_component: Node = player.get_node_or_null("ExperienceComponent")
 	if xp_component and xp_component.has_method("add_experience"):
 		xp_component.add_experience(xp_reward)
 
@@ -318,7 +357,7 @@ func _award_rewards() -> void:
 
 	# Future item/drop support
 	if drop_scene != null and randf() <= drop_chance:
-		var drop_instance := drop_scene.instantiate()
+		var drop_instance: Node = drop_scene.instantiate()
 		if drop_instance:
 			get_parent().add_child(drop_instance)
 			if drop_instance is Node2D:

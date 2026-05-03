@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b5ybse6xou1ss"]
 
 [ext_resource type="Script" uid="uid://x0oyk4yx5nej" path="res://scripts/world_map_ui.gd" id="1_wmap"]
+[ext_resource type="Script" path="res://scripts/world_map_scene_art.gd" id="2_mapart"]
 
 [node name="WorldMapUI" type="CanvasLayer" unique_id=200358565]
 layer = 5
@@ -8,7 +9,7 @@ visible = false
 script = ExtResource("1_wmap")
 
 [node name="MapRoot" type="Control" parent="." unique_id=1015458116]
-texture_filter = 1
+texture_filter = 0
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,7 +24,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.62)
+color = Color(0.02, 0.012, 0.006, 0.48)
 
 [node name="Panel" type="PanelContainer" parent="MapRoot" unique_id=157445887]
 layout_mode = 1
@@ -32,27 +33,27 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -160.0
-offset_top = -68.0
-offset_right = 160.0
-offset_bottom = 68.0
+offset_left = -158.0
+offset_top = -82.0
+offset_right = 158.0
+offset_bottom = 82.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Margin" type="MarginContainer" parent="MapRoot/Panel" unique_id=1404555988]
 layout_mode = 2
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 6
+theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_bottom = 7
 
 [node name="VBox" type="VBoxContainer" parent="MapRoot/Panel/Margin" unique_id=808307639]
 layout_mode = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 4
 
 [node name="Title" type="Label" parent="MapRoot/Panel/Margin/VBox" unique_id=1348469990]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "World Map"
 horizontal_alignment = 1
 
@@ -64,18 +65,19 @@ horizontal_alignment = 1
 
 [node name="MapField" type="Control" parent="MapRoot/Panel/Margin/VBox" unique_id=1038237808]
 clip_contents = true
-custom_minimum_size = Vector2(0, 76)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FieldBg" type="ColorRect" parent="MapRoot/Panel/Margin/VBox/MapField" unique_id=729635641]
+[node name="MapArt" type="Control" parent="MapRoot/Panel/Margin/VBox/MapField" unique_id=729635641]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.14, 0.17, 0.18, 0.45)
+mouse_filter = 2
+script = ExtResource("2_mapart")
 
 [node name="Nodes" type="Control" parent="MapRoot/Panel/Margin/VBox/MapField" unique_id=884636029]
 layout_mode = 1

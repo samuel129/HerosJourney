@@ -1,0 +1,71 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy_grunt.gd" id="1_boss"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(26, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(34, 34)
+
+[node name="BossBladeChampion" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_boss")
+threat_tier = 2
+move_speed = 62.0
+chase_range = 230.0
+patrol_distance = 92.0
+max_health = 140
+attack_damage = 20
+attack_range = 34.0
+attack_vertical_range = 34.0
+attack_windup = 0.14
+attack_cooldown_time = 0.58
+xp_reward = 160
+gold_reward = 50
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.12, 0.08, 0.36, 1)
+polygon = PackedVector2Array(-13, -13, -7, -21, 10, -20, 17, -9, 13, 18, -13, 16, -18, -4)
+
+[node name="Cape" type="Polygon2D" parent="Body"]
+color = Color(0.05, 0.03, 0.16, 1)
+polygon = PackedVector2Array(-10, -10, -25, 2, -17, 21, -4, 12)
+
+[node name="Helm" type="Polygon2D" parent="Body"]
+z_index = 1
+color = Color(0.34, 0.28, 0.78, 1)
+polygon = PackedVector2Array(-9, -23, 9, -23, 14, -14, 7, -8, -8, -9, -14, -15)
+
+[node name="Plume" type="Polygon2D" parent="Body"]
+z_index = 2
+color = Color(0.95, 0.22, 0.28, 1)
+polygon = PackedVector2Array(-2, -24, 4, -35, 8, -23)
+
+[node name="Visor" type="Polygon2D" parent="Body"]
+z_index = 3
+color = Color(0.88, 0.88, 0.94, 1)
+polygon = PackedVector2Array(-6, -17, 9, -17, 7, -14, -6, -14)
+
+[node name="Greatsword" type="Polygon2D" parent="Body"]
+z_index = 2
+color = Color(0.84, 0.88, 0.92, 1)
+polygon = PackedVector2Array(13, -18, 24, -27, 20, 10, 15, 16)
+
+[node name="SwordGrip" type="Polygon2D" parent="Body"]
+z_index = 3
+color = Color(0.7, 0.48, 0.18, 1)
+polygon = PackedVector2Array(10, 0, 23, -1, 23, 4, 10, 5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="Hurtbox" type="Area2D" parent="."]
