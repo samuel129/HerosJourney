@@ -465,20 +465,39 @@ func _bind_player_signals() -> void:
 func _on_player_died() -> void:
 	if transitioning_stage or is_world_map_open or is_vendor_open:
 		return
+	_handle_death_sequence()
 
-func _handle_player_respawn() -> void:
+func _handle_death_sequence() -> void:
 	transitioning_stage = true
-	await get_tree().create_timer(respawn_delay).timeout
-	if not is_instance_valid(player):
-		transitioning_stage = false
-		return
-	if player.has_method("respawn_at"):
-		player.call("respawn_at", player_spawn_position)
-
-	clear_active_enemies()
-	_clear_stage_portal()
-	stage_clear_recorded = false
-	transitioning_stage = false
+	var hud = get_node_or_null("HUD")
+	if hud:
+		hud.visible = false
+	if player:
+		player.set_process(false)
+		player.set_physics_process(false)
+	# Camera zoom
+	var cam: Camera2D = $Camera2D
+	var cam_script = $Camera2D
+	cam_script.set_process(false)
+	var tween = create_tween()
+	var target_zoom = cam.zoom * 2
+	tween.tween_property(cam, "zoom", target_zoom, 0.4)
+	# Center camera on player
+	if player:
+		cam.global_position = player.global_position
+	# Wait for death animation ---
+	if player and player.has_signal("animation_finished"):
+		await player.animation_finished
+	else:
+		await get_tree().create_timer(2).timeout
+	# Calculate shards before ending run
+	var run_data = RunManager.run_data
+	var run_gold: int = int(run_data.resources.get("gold", 0))
+	var shards_earned: int = int(floor(float(run_gold) * 0.5))
+	# Show UI
+	$GameOverUI.show_game_over(run_data, shards_earned)
+	get_tree().paused = true
+	RunManager.end_run()
 
 func _try_spawn_stage_portal() -> void:
 	if transitioning_stage or is_world_map_open or is_vendor_open:
@@ -668,6 +687,9 @@ func _hook_hud_signals() -> void:
 		if xp.has_signal("exp_changed"):
 			xp.exp_changed.connect(func(exp: int, exp_to_next: int, level: int) -> void:
 				hud.set_exp(exp, exp_to_next)
+				if RunManager.run_data:
+					RunManager.run_data.resources["level"] = xp.level
+					RunManager.run_data.resources["experience"] = xp.experience
 			)
 
 		# Level up popup
