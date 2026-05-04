@@ -4,6 +4,7 @@ extends CanvasLayer
 @onready var mat = rect.material
 
 func _ready():
+	layer = 1000
 	rect.visible = false
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 

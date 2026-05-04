@@ -10,6 +10,7 @@
 [ext_resource type="AudioStream" uid="uid://dxwfo55rhl4gq" path="res://assets/audio/Background Music.ogg" id="6_p57ef"]
 [ext_resource type="PackedScene" uid="uid://b5ybse6xou1ss" path="res://scenes/world_map_ui.tscn" id="7_wmap"]
 [ext_resource type="PackedScene" uid="uid://dv8mrtc1mate6" path="res://scenes/vendor_ui.tscn" id="8_vendor"]
+[ext_resource type="PackedScene" uid="uid://cjgk4loubpk33" path="res://scenes/game_over_ui.tscn" id="10_kvpfn"]
 
 [node name="Game" type="Node2D" unique_id=1564412177]
 position = Vector2(0, -1)
@@ -53,8 +54,12 @@ follow_target = NodePath("../Player")
 [node name="HUD" parent="." unique_id=1541716179 instance=ExtResource("2_hud")]
 
 [node name="VendorUI" parent="." unique_id=1472423695 instance=ExtResource("8_vendor")]
+visible = false
 
 [node name="WorldMapUI" parent="." unique_id=964140339 instance=ExtResource("7_wmap")]
+
+[node name="GameOverUI" parent="." unique_id=3856808 instance=ExtResource("10_kvpfn")]
+visible = false
 
 [node name="Background Music" type="AudioStreamPlayer" parent="." unique_id=77114163]
 stream = ExtResource("6_p57ef")

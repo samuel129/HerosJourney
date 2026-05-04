@@ -1,0 +1,150 @@
+[gd_scene format=3 uid="uid://cjgk4loubpk33"]
+
+[ext_resource type="Script" uid="uid://cgdxhklip7q" path="res://scripts/game_over_ui.gd" id="1_y6ord"]
+[ext_resource type="Shader" uid="uid://blshmg1ouxhc7" path="res://assets/art/ui/swirl_bg.gdshader" id="2_lk38d"]
+
+[sub_resource type="SystemFont" id="SystemFont_nbgkd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cotc0"]
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 4
+border_color = Color(0.36078432, 0.36078432, 0.36078432, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5bb4p"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="SystemFont" id="SystemFont_v8dr6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eecca"]
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 4
+border_color = Color(0.36078432, 0.36078432, 0.36078432, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7own1"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vqijj"]
+shader = ExtResource("2_lk38d")
+shader_parameter/polar_coordinates = false
+shader_parameter/polar_center = Vector2(0.5, 0.5)
+shader_parameter/polar_zoom = 1.0
+shader_parameter/polar_repeat = 1.0
+shader_parameter/spin_rotation = 0.0
+shader_parameter/spin_speed = 10.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(1, 0, 0, 0.39215687)
+shader_parameter/colour_2 = Color(0, 0, 0, 0)
+shader_parameter/colour_3 = Color(0, 0, 0, 0)
+shader_parameter/contrast = 2.0
+shader_parameter/spin_amount = 0.36
+shader_parameter/pixel_filter = 700.0
+
+[node name="GameOverUI" type="CanvasLayer" unique_id=3856808]
+script = ExtResource("1_y6ord")
+
+[node name="Root" type="Control" parent="." unique_id=1284294434]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Root" unique_id=716248882]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.27058825, 0, 0, 0.5882353)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root" unique_id=1098141894]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -148.0
+offset_right = 148.0
+offset_bottom = 96.0
+grow_horizontal = 2
+
+[node name="Empty" type="Label" parent="Root/VBoxContainer" unique_id=287030693]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slain" type="Label" parent="Root/VBoxContainer" unique_id=197585909]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "You were slain..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Stats" type="Label" parent="Root/VBoxContainer" unique_id=1341358223]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "stats"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/VBoxContainer" unique_id=2020164925]
+layout_mode = 2
+theme_override_constants/separation = 96
+alignment = 1
+
+[node name="NewGameButton" type="Button" parent="Root/VBoxContainer/HBoxContainer" unique_id=1443388495]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0.2509804, 0.24313726, 1)
+theme_override_fonts/font = SubResource("SystemFont_nbgkd")
+theme_override_styles/normal = SubResource("StyleBoxFlat_cotc0")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5bb4p")
+text = "New Run"
+
+[node name="MenuButton" type="Button" parent="Root/VBoxContainer/HBoxContainer" unique_id=1044760722]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(1.8049032e-07, 0.25274533, 0.2444737, 1)
+theme_override_fonts/font = SubResource("SystemFont_v8dr6")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eecca")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7own1")
+text = "Menu"
+
+[node name="ColorRect2" type="ColorRect" parent="Root" unique_id=162339368]
+z_index = -2
+material = SubResource("ShaderMaterial_vqijj")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[connection signal="pressed" from="Root/VBoxContainer/HBoxContainer/NewGameButton" to="." method="_on_new_game_button_pressed"]
+[connection signal="pressed" from="Root/VBoxContainer/HBoxContainer/MenuButton" to="." method="_on_menu_button_pressed"]
