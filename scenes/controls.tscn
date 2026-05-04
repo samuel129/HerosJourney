@@ -3,7 +3,12 @@
 [ext_resource type="Script" uid="uid://d0p0hpat18txo" path="res://scenes/control_background.gd" id="2_5tddo"]
 [ext_resource type="Texture2D" uid="uid://oiglthkgt7px" path="res://assets/art/ui/xbutton.png" id="3_cywyo"]
 [ext_resource type="Texture2D" uid="uid://cvrnu24fea367" path="res://assets/art/ui/xbutton hover.png" id="4_ihl6s"]
+[ext_resource type="Script" uid="uid://thqrga1aq8mj" path="res://scenes/options_menu.gd" id="5_dloai"]
 [ext_resource type="Shader" uid="uid://blshmg1ouxhc7" path="res://assets/art/ui/swirl_bg.gdshader" id="5_jlst0"]
+[ext_resource type="Script" uid="uid://uo3nvs1m413i" path="res://scenes/audio_options.gd" id="6_k6bol"]
+[ext_resource type="Theme" uid="uid://dv4eewpm0yj8e" path="res://assets/fonts/newbutton_theme.tres" id="7_k6bol"]
+[ext_resource type="Script" uid="uid://cqfief4q3jql7" path="res://scenes/keybinds_settings.gd" id="7_t622t"]
+[ext_resource type="PackedScene" uid="uid://cq6rdtya1cfb8" path="res://scenes/input_button.tscn" id="8_vwfca"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dloai"]
 shader = ExtResource("5_jlst0")
@@ -21,6 +26,11 @@ shader_parameter/contrast = 2.0
 shader_parameter/spin_amount = 0.36
 shader_parameter/pixel_filter = 700.0
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_dloai"]
+color = Color(0.39050013, 0, 0.71, 1)
+grow_begin = 0.0
+grow_end = 0.0
+
 [node name="Controls" type="Control" unique_id=801336002]
 layout_mode = 3
 anchors_preset = 15
@@ -34,6 +44,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -42,25 +54,19 @@ position = Vector2(161, 93)
 scale = Vector2(2.3833334, 1.8333333)
 script = ExtResource("2_5tddo")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Root" unique_id=76598259]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/default_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/normal_font_size = 16
-text = "W/ Up Arrow /Space: Jump
-A/ Left Arrow: Move Left
-D/ Right Arrow: Move Right
-S/ Down Arrow: Fast Fall
-Shift: Sprint/Run
-Left Click /Z: Attack"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="BackButton" type="Button" parent="Root" unique_id=1301061782]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 146.0
+offset_right = 56.0
+offset_bottom = 166.0
+theme = ExtResource("7_k6bol")
+theme_override_colors/font_hover_color = Color(0.23921569, 0, 0.42745098, 1)
+theme_override_font_sizes/font_size = 8
+text = "Back"
 
 [node name="Exit" type="TextureButton" parent="Root" unique_id=1668999483]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -82,4 +88,168 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="OptionsMenu" type="Control" parent="." unique_id=663548489]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = -9.0
+offset_right = -152.0
+offset_bottom = -39.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_dloai")
+
+[node name="AudioOptions" type="Control" parent="OptionsMenu" unique_id=1815783506]
+anchors_preset = 0
+offset_left = 13.0
+offset_top = 23.0
+offset_right = 137.0
+offset_bottom = 146.0
+script = ExtResource("6_k6bol")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/AudioOptions" unique_id=1114809781]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.92045456
+anchor_bottom = 0.8
+metadata/_edit_use_anchors_ = true
+
+[node name="VolumeLabel" type="Label" parent="OptionsMenu/AudioOptions/VBoxContainer" unique_id=488795982]
+layout_mode = 2
+text = "Volume"
+
+[node name="MasterHBoxContainer" type="HBoxContainer" parent="OptionsMenu/AudioOptions/VBoxContainer" unique_id=1390563442]
+layout_mode = 2
+
+[node name="MasterLabel" type="Label" parent="OptionsMenu/AudioOptions/VBoxContainer/MasterHBoxContainer" unique_id=725388015]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Master"
+
+[node name="MasterSlider" type="HSlider" parent="OptionsMenu/AudioOptions/VBoxContainer/MasterHBoxContainer" unique_id=870649914]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/slider = SubResource("StyleBoxLine_dloai")
+max_value = 1.0
+step = 0.05
+ticks_position = 3
+
+[node name="SFXHBoxContainer2" type="HBoxContainer" parent="OptionsMenu/AudioOptions/VBoxContainer" unique_id=1632284079]
+layout_mode = 2
+
+[node name="SFXLabel" type="Label" parent="OptionsMenu/AudioOptions/VBoxContainer/SFXHBoxContainer2" unique_id=529730527]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "SFX"
+
+[node name="SFXSlider" type="HSlider" parent="OptionsMenu/AudioOptions/VBoxContainer/SFXHBoxContainer2" unique_id=1865366852]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/slider = SubResource("StyleBoxLine_dloai")
+max_value = 1.0
+step = 0.05
+ticks_position = 3
+
+[node name="MusicHBoxContainer3" type="HBoxContainer" parent="OptionsMenu/AudioOptions/VBoxContainer" unique_id=356044200]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="OptionsMenu/AudioOptions/VBoxContainer/MusicHBoxContainer3" unique_id=200970924]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Music"
+
+[node name="MusicSlider" type="HSlider" parent="OptionsMenu/AudioOptions/VBoxContainer/MusicHBoxContainer3" unique_id=1896307603]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/slider = SubResource("StyleBoxLine_dloai")
+max_value = 1.0
+step = 0.05
+ticks_position = 3
+
+[node name="ToggleLabel" type="Label" parent="OptionsMenu/AudioOptions/VBoxContainer" unique_id=2108595984]
+layout_mode = 2
+text = "Toggle"
+
+[node name="VisualCueHBoxContainer4" type="HBoxContainer" parent="OptionsMenu/AudioOptions/VBoxContainer" unique_id=296277330]
+visible = false
+layout_mode = 2
+
+[node name="VisualCueLabel" type="Label" parent="OptionsMenu/AudioOptions/VBoxContainer/VisualCueHBoxContainer4" unique_id=285023212]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Visual Cue"
+
+[node name="VisualCueCheckButton" type="CheckButton" parent="OptionsMenu/AudioOptions/VBoxContainer/VisualCueHBoxContainer4" unique_id=1911040558]
+layout_mode = 2
+button_pressed = true
+
+[node name="ScreenTransitionHBoxContainer5" type="HBoxContainer" parent="OptionsMenu/AudioOptions/VBoxContainer" unique_id=447084053]
+layout_mode = 2
+
+[node name="ScreenTransitionLabel" type="Label" parent="OptionsMenu/AudioOptions/VBoxContainer/ScreenTransitionHBoxContainer5" unique_id=841163268]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Screen Transition"
+
+[node name="ScreenTransitionCheckButton" type="CheckButton" parent="OptionsMenu/AudioOptions/VBoxContainer/ScreenTransitionHBoxContainer5" unique_id=1625626812]
+layout_mode = 2
+button_pressed = true
+
+[node name="KeybindsSettings" type="Control" parent="OptionsMenu" unique_id=976268514]
+anchors_preset = 0
+offset_left = 13.0
+offset_top = 23.0
+offset_right = 13.0
+offset_bottom = 180.0
+script = ExtResource("7_t622t")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OptionsMenu/KeybindsSettings" unique_id=146229458]
+layout_mode = 0
+offset_left = 141.0
+offset_right = 282.0
+offset_bottom = 121.0
+
+[node name="KeybindsLabel" type="Label" parent="OptionsMenu/KeybindsSettings/VBoxContainer" unique_id=573679380]
+layout_mode = 2
+text = "Keybinds"
+horizontal_alignment = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="OptionsMenu/KeybindsSettings/VBoxContainer" unique_id=1947705559]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionList" type="VBoxContainer" parent="OptionsMenu/KeybindsSettings/VBoxContainer/ScrollContainer" unique_id=301732994]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InputButton" parent="OptionsMenu/KeybindsSettings/VBoxContainer/ScrollContainer/ActionList" unique_id=98938198 instance=ExtResource("8_vwfca")]
+layout_mode = 2
+
+[node name="ResetButton" type="Button" parent="OptionsMenu/KeybindsSettings/VBoxContainer" unique_id=1237348626]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("7_k6bol")
+theme_override_colors/font_hover_color = Color(0.23921569, 0, 0.42745098, 1)
+theme_override_font_sizes/font_size = 8
+text = "Reset"
+
+[node name="Save Sound" type="Button" parent="OptionsMenu" unique_id=1413918051]
+layout_mode = 0
+offset_left = 256.0
+offset_top = 154.0
+offset_right = 302.0
+offset_bottom = 174.0
+theme = ExtResource("7_k6bol")
+theme_override_colors/font_hover_color = Color(0.23921569, 0, 0.42745098, 1)
+theme_override_font_sizes/font_size = 8
+text = "Apply"
+
+[connection signal="pressed" from="Root/BackButton" to="Root/ControlBackground" method="_on_back_button_pressed"]
 [connection signal="pressed" from="Root/Exit" to="Root/ControlBackground" method="_on_exit_pressed"]
+[connection signal="mouse_exited" from="OptionsMenu/AudioOptions/VBoxContainer/MasterHBoxContainer/MasterSlider" to="OptionsMenu/AudioOptions" method="_on_master_slider_mouse_exited"]
+[connection signal="mouse_exited" from="OptionsMenu/AudioOptions/VBoxContainer/SFXHBoxContainer2/SFXSlider" to="OptionsMenu/AudioOptions" method="_on_sfx_slider_mouse_exited"]
+[connection signal="mouse_exited" from="OptionsMenu/AudioOptions/VBoxContainer/MusicHBoxContainer3/MusicSlider" to="OptionsMenu/AudioOptions" method="_on_music_slider_mouse_exited"]
+[connection signal="pressed" from="OptionsMenu/KeybindsSettings/VBoxContainer/ResetButton" to="OptionsMenu/KeybindsSettings" method="_on_reset_button_pressed"]
+[connection signal="pressed" from="OptionsMenu/Save Sound" to="OptionsMenu" method="_on_confirm_pressed"]

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dv8mrtc1mate6"]
 
 [ext_resource type="Script" uid="uid://dmp0b4vewovwp" path="res://scripts/vendor_ui.gd" id="1_vendor"]
-[ext_resource type="Script" path="res://scripts/vendor_scene_art.gd" id="2_art"]
+[ext_resource type="Script" uid="uid://bqy1vtw3db5g5" path="res://scripts/vendor_scene_art.gd" id="2_art"]
 
 [node name="VendorUI" type="CanvasLayer" unique_id=1918102728]
 layer = 4
@@ -9,7 +9,6 @@ visible = false
 script = ExtResource("1_vendor")
 
 [node name="Root" type="Control" parent="." unique_id=1379596755]
-texture_filter = 0
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,7 +16,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CampArt" type="Control" parent="Root"]
+[node name="CampArt" type="Control" parent="Root" unique_id=1304192949]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +25,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_art")
-art_mode = "camp"
 
 [node name="Dim" type="ColorRect" parent="Root" unique_id=1943600911]
 layout_mode = 1
@@ -59,11 +57,11 @@ theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 7
 
-[node name="Layout" type="HBoxContainer" parent="Root/Panel/Margin"]
+[node name="Layout" type="HBoxContainer" parent="Root/Panel/Margin" unique_id=1489224821]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="ShopColumn" type="VBoxContainer" parent="Root/Panel/Margin/Layout"]
+[node name="ShopColumn" type="VBoxContainer" parent="Root/Panel/Margin/Layout" unique_id=680680687]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 5
@@ -104,18 +102,18 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 8
 text = "Open Route Map"
 
-[node name="TravelColumn" type="VBoxContainer" parent="Root/Panel/Margin/Layout"]
+[node name="TravelColumn" type="VBoxContainer" parent="Root/Panel/Margin/Layout" unique_id=1919386154]
 custom_minimum_size = Vector2(84, 0)
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="MapTitle" type="Label" parent="Root/Panel/Margin/Layout/TravelColumn"]
+[node name="MapTitle" type="Label" parent="Root/Panel/Margin/Layout/TravelColumn" unique_id=1697381732]
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
 text = "Road Sketch"
 horizontal_alignment = 1
 
-[node name="MapPreview" type="Control" parent="Root/Panel/Margin/Layout/TravelColumn"]
+[node name="MapPreview" type="Control" parent="Root/Panel/Margin/Layout/TravelColumn" unique_id=463571606]
 clip_contents = true
 custom_minimum_size = Vector2(84, 70)
 layout_mode = 2
@@ -123,7 +121,7 @@ mouse_filter = 2
 script = ExtResource("2_art")
 art_mode = "map"
 
-[node name="MapCaption" type="Label" parent="Root/Panel/Margin/Layout/TravelColumn"]
+[node name="MapCaption" type="Label" parent="Root/Panel/Margin/Layout/TravelColumn" unique_id=481252707]
 layout_mode = 2
 theme_override_font_sizes/font_size = 8
 text = "Vendor camp marks your next fork."

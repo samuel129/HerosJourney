@@ -39,8 +39,6 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="Theme" id="Theme_wu84c"]
-
 [node name="MainMenu" type="Control" unique_id=1864574091]
 layout_mode = 3
 anchors_preset = 15
@@ -126,7 +124,6 @@ offset_left = 24.0
 offset_top = 55.0
 offset_right = 156.0
 offset_bottom = 136.0
-theme = SubResource("Theme_wu84c")
 theme_override_constants/separation = 4
 
 [node name="Start" type="Button" parent="Main Menu/Button_Manager/Buttons" unique_id=1430061358]
@@ -151,7 +148,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_wu84c")
 theme_override_styles/hover = SubResource("StyleBoxFlat_8ln24")
 text = "Upgrades"
 
-[node name="Controls" type="Button" parent="Main Menu/Button_Manager/Buttons" unique_id=49792201]
+[node name="Settings" type="Button" parent="Main Menu/Button_Manager/Buttons" unique_id=49792201]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -176,5 +173,5 @@ text = "Quit"
 [connection signal="pressed" from="Main Menu/Restart Data" to="Main Menu" method="_on_restart_data_pressed"]
 [connection signal="pressed" from="Main Menu/Button_Manager/Buttons/Start" to="Main Menu" method="_on_start_pressed"]
 [connection signal="pressed" from="Main Menu/Button_Manager/Buttons/Upgrades" to="Main Menu" method="_on_upgrades_pressed"]
-[connection signal="pressed" from="Main Menu/Button_Manager/Buttons/Controls" to="Main Menu" method="_on_controls_pressed"]
+[connection signal="pressed" from="Main Menu/Button_Manager/Buttons/Settings" to="Main Menu" method="_on_controls_pressed"]
 [connection signal="pressed" from="Main Menu/Button_Manager/Buttons/Quit" to="Main Menu" method="_on_quit_pressed"]

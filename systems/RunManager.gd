@@ -491,3 +491,5 @@ func _apply_choice_rewards(choice: Dictionary) -> void:
 	var current_health: int = int(run_data.stats.get("health", max_health))
 	var heal_amount: int = int(round(max_health * heal_percent))
 	run_data.stats["health"] = min(max_health, current_health + heal_amount)
+	
+var settings: Dictionary = {"screen_transition": true}

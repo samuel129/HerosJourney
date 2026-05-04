@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b5ybse6xou1ss"]
 
 [ext_resource type="Script" uid="uid://x0oyk4yx5nej" path="res://scripts/world_map_ui.gd" id="1_wmap"]
-[ext_resource type="Script" path="res://scripts/world_map_scene_art.gd" id="2_mapart"]
+[ext_resource type="Script" uid="uid://dmi3gxsn4wxg8" path="res://scripts/world_map_scene_art.gd" id="2_mapart"]
 
 [node name="WorldMapUI" type="CanvasLayer" unique_id=200358565]
 layer = 5
@@ -9,7 +9,6 @@ visible = false
 script = ExtResource("1_wmap")
 
 [node name="MapRoot" type="Control" parent="." unique_id=1015458116]
-texture_filter = 0
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
