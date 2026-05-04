@@ -687,6 +687,9 @@ func _hook_hud_signals() -> void:
 		if xp.has_signal("exp_changed"):
 			xp.exp_changed.connect(func(exp: int, exp_to_next: int, level: int) -> void:
 				hud.set_exp(exp, exp_to_next)
+				if RunManager.run_data:
+					RunManager.run_data.resources["level"] = xp.level
+					RunManager.run_data.resources["experience"] = xp.experience
 			)
 
 		# Level up popup
