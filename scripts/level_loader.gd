@@ -17,6 +17,16 @@ var chunk_count: int = 5
 const ROW_HEIGHT: int = 2
 const NUM_THEMES: int = 7
 
+const THEME_TO_DECOR_STYLES := {
+	0: [0],        # Brown → white decorations
+	1: [0, 2],     # Blue → white or green (or swap to blue later)
+	2: [2],        # Green → green only
+	3: [1],        # Red → red only
+	4: [1],        # Yellow → warm (closest you have)
+	5: [0, 1, 2],  # White → all
+	6: [0, 1, 2],  # Gray → all
+}
+
 func generate_level(level_config: Dictionary = {}) -> Node2D:
 	if bool(level_config.get("mini_boss_stage", false)):
 		return generate_mini_boss_level(level_config)
@@ -26,6 +36,9 @@ func generate_level(level_config: Dictionary = {}) -> Node2D:
 	total_chunks = clampi(total_chunks, 1, 12)
 
 	var theme_row: int = _resolve_theme_row(level_config)
+	var styles: Array = THEME_TO_DECOR_STYLES.get(theme_row, [0])
+	var level_style_index: int = styles.pick_random()
+	level_root.set_meta("decor_style", level_style_index)
 
 	level_root.set_meta("level_config", level_config.duplicate(true))
 	level_root.set_meta("chunk_count", total_chunks)
@@ -85,19 +98,30 @@ func _resolve_theme_row(level_config: Dictionary) -> int:
 	return randi() % NUM_THEMES
 
 func _apply_theme_to_chunk(chunk: Node2D, theme_row: int) -> void:
-	var tilemaps: Array[Node] = chunk.find_children("", "TileMapLayer", true, false)
-	for raw_tilemap in tilemaps:
-		var tilemap: TileMapLayer = raw_tilemap as TileMapLayer
-		if tilemap == null:
+	var tilemap := chunk.get_node_or_null("Foreground") as TileMapLayer
+
+	if tilemap == null:
+		print("No Foreground in:", chunk.name)
+		return
+
+	var used_cells = tilemap.get_used_cells()
+
+	for cell in used_cells:
+		var source_id = tilemap.get_cell_source_id(cell)
+		if source_id == -1:
 			continue
-		if not tilemap.is_in_group("themed_tilemap"): continue
-		var used_cells: Array[Vector2i] = tilemap.get_used_cells()
-		for cell in used_cells:
-			var source_id: int = tilemap.get_cell_source_id(cell)
-			var atlas_coords: Vector2i = tilemap.get_cell_atlas_coords(cell)
-			if source_id == -1: continue
-			var new_coords: Vector2i = Vector2i(atlas_coords.x, atlas_coords.y + theme_row * ROW_HEIGHT)
-			tilemap.set_cell(cell, source_id, new_coords)
+
+		var atlas_coords = tilemap.get_cell_atlas_coords(cell)
+
+		# Normalize BEFORE applying theme
+		var base_y: int = atlas_coords.y % ROW_HEIGHT
+
+		var new_coords = Vector2i(
+			atlas_coords.x,
+			base_y + theme_row * ROW_HEIGHT
+		)
+
+		tilemap.set_cell(cell, source_id, new_coords)
 
 func _get_boss_arena_style_index(level_config: Dictionary) -> int:
 	var stage: int = int(level_config.get("stage", 3))
@@ -105,6 +129,8 @@ func _get_boss_arena_style_index(level_config: Dictionary) -> int:
 
 func _decorate_stage_chunk(chunk: Node2D, theme_row: int, chunk_index: int) -> void:
 	var foreground: TileMapLayer = chunk.get_node_or_null("Foreground") as TileMapLayer
+	var level_root := chunk.get_parent()
+	var chunk_style_index: int = level_root.get_meta("decor_style", 0)
 	if foreground == null:
 		return
 
@@ -129,8 +155,8 @@ func _decorate_stage_chunk(chunk: Node2D, theme_row: int, chunk_index: int) -> v
 		max_pos.y = maxf(max_pos.y, cell_pos.y)
 
 	var backdrop_rect: Rect2 = Rect2(min_pos + Vector2(-44.0, -108.0), (max_pos - min_pos) + Vector2(88.0, 178.0))
-	_add_stage_backdrop(decoration_root, backdrop_rect, theme_row, chunk_index)
-	_add_stage_tile_dressing(decoration_root, foreground, occupied_cells, used_cells, theme_row, chunk_index)
+	_add_stage_backdrop(decoration_root, backdrop_rect, chunk_style_index, chunk_index)
+	_add_stage_tile_dressing(decoration_root, foreground, occupied_cells, used_cells, chunk_style_index, chunk_index)
 
 func _add_stage_backdrop(parent: Node2D, rect: Rect2, theme_row: int, chunk_index: int) -> void:
 	var backdrop_color: Color = _get_stage_palette_color(theme_row, "backdrop")
@@ -217,7 +243,7 @@ func _add_stage_tuft(parent: Node2D, origin: Vector2, color: Color, index: int) 
 	_add_line(parent, "StageTuftB%d" % index, color.lightened(0.12), PackedVector2Array([origin + Vector2(0.0, 2.0), origin + Vector2(4.0, -5.0), origin + Vector2(6.0, 2.0)]), 1.0, 2)
 
 func _get_stage_palette_color(theme_row: int, role: String) -> Color:
-	var style_index: int = posmod(theme_row, 3)
+	var style_index: int = theme_row
 	match style_index:
 		1:
 			match role:

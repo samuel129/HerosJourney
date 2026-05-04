@@ -110,13 +110,10 @@ func load_generated_level(level_node: Node2D) -> void:
 		player_spawn_position = spawn.global_position
 		if player is CharacterBody2D:
 			(player as CharacterBody2D).velocity = Vector2.ZERO
-		$Camera2D.global_position = player.global_position
-		$Camera2D.reset_smoothing()
-		$Camera2D.reset_camera()
-
-	await get_tree().process_frame
-
 	_apply_camera_limits()
+	$Camera2D.global_position = player.global_position
+	$Camera2D.reset_smoothing()
+	$Camera2D.reset_camera()
 
 	if portal_scene:
 		var portal = portal_scene.instantiate()
@@ -468,7 +465,6 @@ func _bind_player_signals() -> void:
 func _on_player_died() -> void:
 	if transitioning_stage or is_world_map_open or is_vendor_open:
 		return
-	_handle_player_respawn()
 
 func _handle_player_respawn() -> void:
 	transitioning_stage = true
@@ -482,7 +478,6 @@ func _handle_player_respawn() -> void:
 	clear_active_enemies()
 	_clear_stage_portal()
 	stage_clear_recorded = false
-	spawn_enemies_for_chunks()
 	transitioning_stage = false
 
 func _try_spawn_stage_portal() -> void:
