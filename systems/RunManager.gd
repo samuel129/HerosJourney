@@ -493,3 +493,4 @@ func _apply_choice_rewards(choice: Dictionary) -> void:
 	run_data.stats["health"] = min(max_health, current_health + heal_amount)
 	
 var settings: Dictionary = {"screen_transition": true}
+var saved_keybinds: Dictionary = {}
