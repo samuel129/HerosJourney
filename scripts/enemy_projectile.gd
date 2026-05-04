@@ -42,7 +42,7 @@ func _resolve_swept_collision(next_position: Vector2) -> bool:
 	query.collide_with_areas = true
 	query.collide_with_bodies = true
 	query.exclude = [get_rid()]
-	if source_enemy is CollisionObject2D:
+	if is_instance_valid(source_enemy) and source_enemy is CollisionObject2D:
 		query.exclude.append((source_enemy as CollisionObject2D).get_rid())
 
 	var hit: Dictionary = get_world_2d().direct_space_state.intersect_ray(query)

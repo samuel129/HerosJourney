@@ -10,7 +10,7 @@ enum ThreatTier {
 
 @export var move_speed: float = 40.0
 @export var gravity: float = 900.0
-@export var chase_range: float = 140.0
+@export var chase_range: float = 70.0
 @export var patrol_distance: float = 56.0
 @export var max_health: int = 30
 @export var attack_damage: int = 10
@@ -49,6 +49,8 @@ var ranged_attack_queued: bool = false
 var target_player: Node2D = null
 var knockback_timer: float = 0.0
 var base_body_color: Color = Color(0.55, 0.12, 0.12, 1.0)
+
+var lava_damage_cooldown: float = 0.0
 
 var health_component: HealthComponent
 
@@ -90,6 +92,11 @@ func _ensure_health_component() -> void:
 	)
 
 func _physics_process(delta: float) -> void:
+	lava_damage_cooldown = maxf(0.0, lava_damage_cooldown - delta)
+
+	if lava_damage_cooldown <= 0.0 and _is_in_lava():
+		take_damage(10)
+		lava_damage_cooldown = 0.5
 	attack_cooldown = maxf(0.0, attack_cooldown - delta)
 	attack_windup_timer = maxf(0.0, attack_windup_timer - delta)
 	ranged_cooldown = maxf(0.0, ranged_cooldown - delta)
@@ -386,3 +393,25 @@ func _get_default_gold_reward() -> int:
 		ThreatTier.BOSS:
 			return 100
 	return 5
+
+func _is_in_lava() -> bool:
+	var game = get_tree().get_first_node_in_group("game")
+	if game == null or game.current_level == null:
+		return false
+
+	var feet_pos = global_position + Vector2(0, 10)
+
+	for chunk in game.current_level.get_children():
+		var lava = chunk.get_node_or_null("Lava")
+		if lava == null:
+			continue
+
+		var local_pos = lava.to_local(feet_pos)
+		var cell = lava.local_to_map(local_pos)
+
+		var tile_data = lava.get_cell_tile_data(cell)
+
+		if tile_data != null:
+			return true
+
+	return false

@@ -336,7 +336,7 @@ func _decorate_boss_arena(chunk: Node2D, level_config: Dictionary) -> void:
 			_add_guardian_arena_decoration(decoration_root)
 
 func _add_blade_arena_decoration(parent: Node2D) -> void:
-	_add_polygon(parent, "ColdStoneBack", Color(0.07, 0.08, 0.16, 1.0), PackedVector2Array([Vector2(184, -160), Vector2(720, -160), Vector2(720, 32), Vector2(184, 32)]), -8)
+	_add_polygon(parent, "ColdStoneBack", Color(0.07, 0.08, 0.16, 1.0), PackedVector2Array([Vector2(0, -160), Vector2(720, -160), Vector2(720, 32), Vector2(0, 32)]), -8)
 	_add_polygon(parent, "SteelFloorWash", Color(0.13, 0.14, 0.22, 0.72), PackedVector2Array([Vector2(192, -8), Vector2(704, -8), Vector2(704, 32), Vector2(192, 32)]), -5)
 	for index in range(7):
 		var x: float = 220.0 + float(index) * 68.0

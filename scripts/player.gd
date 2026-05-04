@@ -15,6 +15,8 @@ extends CharacterBody2D
 @export var Sword_attack: AudioStreamPlayer2D
 @export var ghost_scene: PackedScene
 
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+
 var controls_locked: bool = true
 var facing_dir: float
 var hurt_cooldown: float = 0.0
@@ -167,6 +169,9 @@ func _physics_process(delta: float) -> void:
 	if dash_component.can_dash and can_dash:
 		dash()
 	move_and_slide()
+	
+	if _is_in_lava():
+		receive_damage(10)
 
 func attack() -> void:
 	Sword_attack.play()
@@ -202,7 +207,15 @@ func receive_damage(amount: int) -> void:
 	if health_component == null:
 		return
 	health_component.take_damage(amount)
+	_flash_damage()
 	hurt_cooldown = 0.4
+
+func _flash_damage() -> void:
+	if sprite == null:
+		return
+	var tween = create_tween()
+	tween.tween_property(sprite, "modulate", Color(1, 0.3, 0.3, 0.6), 0.05)
+	tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.1)
 
 func respawn_at(spawn_position: Vector2) -> void:
 	global_position = spawn_position
@@ -231,3 +244,42 @@ func _on_health_component_died() -> void:
 	if animation_component:
 		animation_component.play_death_animation()
 	player_died.emit()
+
+func _is_in_lava() -> bool:
+	var game = get_tree().get_first_node_in_group("game")
+	if game == null or game.current_level == null:
+		return false
+
+	var feet_pos = global_position + Vector2(0, 10)
+
+	for chunk in game.current_level.get_children():
+		var lava = chunk.get_node_or_null("Lava")
+		if lava == null:
+			continue
+
+		# Convert player position into lava local space
+		var local_pos = lava.to_local(feet_pos)
+
+		# Get lava bounds using used cells
+		var used_cells = lava.get_used_cells()
+		if used_cells.is_empty():
+			continue
+
+		var min_cell = used_cells[0]
+		var max_cell = used_cells[0]
+
+		for cell in used_cells:
+			min_cell = Vector2i(min(min_cell.x, cell.x), min(min_cell.y, cell.y))
+			max_cell = Vector2i(max(max_cell.x, cell.x), max(max_cell.y, cell.y))
+
+		var tile_size = lava.tile_set.tile_size
+
+		var rect = Rect2(
+			lava.map_to_local(min_cell),
+			(max_cell - min_cell + Vector2i.ONE) * tile_size
+		)
+
+		if rect.has_point(local_pos):
+			return true
+
+	return false

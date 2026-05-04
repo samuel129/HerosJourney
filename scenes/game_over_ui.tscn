@@ -4,6 +4,7 @@
 [ext_resource type="Shader" uid="uid://blshmg1ouxhc7" path="res://assets/art/ui/swirl_bg.gdshader" id="2_lk38d"]
 
 [sub_resource type="SystemFont" id="SystemFont_nbgkd"]
+subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cotc0"]
 bg_color = Color(1, 1, 1, 1)
@@ -24,6 +25,7 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="SystemFont" id="SystemFont_v8dr6"]
+subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eecca"]
 bg_color = Color(1, 1, 1, 1)
@@ -52,7 +54,7 @@ shader_parameter/polar_repeat = 1.0
 shader_parameter/spin_rotation = 0.0
 shader_parameter/spin_speed = 10.0
 shader_parameter/offset = Vector2(0, 0)
-shader_parameter/colour_1 = Color(1, 0, 0, 0.39215687)
+shader_parameter/colour_1 = Color(1, 0, 0, 0.49019608)
 shader_parameter/colour_2 = Color(0, 0, 0, 0)
 shader_parameter/colour_3 = Color(0, 0, 0, 0)
 shader_parameter/contrast = 2.0

@@ -594,14 +594,13 @@ tile_map_data = PackedByteArray("AAAEAAEAAAALAAAAAAADAAEAAAALAAAAAAACAAEAAAALAAA
 tile_set = SubResource("TileSet_dx7ac")
 
 [node name="BossEntryWall" type="TileMapLayer" parent="." unique_id=1291817871 groups=["themed_tilemap"]]
-visible = false
 position = Vector2(16, 0)
-tile_map_data = PackedByteArray("AAALAPz/AAAGAAAAAAALAP3/AAAGAAAAAAALAP7/AAAGAAAAAAALAP//AAAGAAAAAAA=")
+tile_map_data = PackedByteArray("AAALAPz/AAAGAAIAAAALAP3/AAAGAAIAAAALAP7/AAAGAAIAAAALAP//AAAGAAIAAAA=")
 tile_set = SubResource("TileSet_dx7ac")
 
 [node name="BossExitWall" type="TileMapLayer" parent="." unique_id=391856590 groups=["themed_tilemap"]]
 position = Vector2(16, 0)
-tile_map_data = PackedByteArray("AAAeAPz/AAAGAAAAAAAeAP3/AAAGAAAAAAAeAP7/AAAGAAAAAAAeAP//AAAGAAAAAAA=")
+tile_map_data = PackedByteArray("AAAeAPz/AAAGAAIAAAAeAP3/AAAGAAIAAAAeAP7/AAAGAAIAAAAeAP//AAAGAAIAAAA=")
 tile_set = SubResource("TileSet_dx7ac")
 
 [node name="PlayerSpawn" type="Marker2D" parent="." unique_id=1866907938]

@@ -1,12 +1,11 @@
 extends CanvasLayer
 
-@onready var hp_bar: ProgressBar = $Control/VBoxContainer/HPBar
-@onready var special_bar: ProgressBar = $Control/VBoxContainer/SpecialBar
-@onready var exp_bar: ProgressBar = $Control/VBoxContainer/ExpBar
-@onready var hp_label: Label = $Control/VBoxContainer/HPLabel
-@onready var special_label: Label = $Control/VBoxContainer/SpecialLabel
-@onready var exp_label: Label = $Control/VBoxContainer/ExpLabel
-var crit_label: Label = null
+@onready var hp_bar: ProgressBar = $Control/ColorRect/HBoxContainer/VBoxContainer/HPBar
+@onready var exp_bar: ProgressBar = $Control/ColorRect/HBoxContainer/VBoxContainer2/ExpBar
+@onready var hp_label: Label = $Control/ColorRect/HBoxContainer/VBoxContainer/HPLabel
+@onready var exp_label: Label = $Control/ColorRect/HBoxContainer/VBoxContainer2/ExpLabel
+@onready var crit_label: Label = $Control/ColorRect/HBoxContainer/CritLabel
+@onready var pause_menu: Control = $PauseMenu
 
 # Smooth animation targets
 var target_hp: float = 0.0
@@ -35,14 +34,6 @@ func _ready() -> void:
 	# Keep HUD updating even if we pause the game for the level-up popup
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_levelup_popup()
-	# Create crit label if it doesn't exist yet
-	if crit_label == null:
-		crit_label = Label.new()
-		crit_label.text = "CRIT 0%"
-		var font: FontFile = load("res://assets/fonts/04B_03__.TTF") as FontFile
-		crit_label.add_theme_font_override("font", font)
-		crit_label.add_theme_font_size_override("font_size", 8)
-		$Control/VBoxContainer.add_child(crit_label)
 
 func bind_player(p: Node) -> void:
 	player_ref = p
@@ -52,11 +43,6 @@ func set_hp(value: int, max_value: int) -> void:
 	hp_bar.max_value = max_value
 	target_hp = float(value)
 	hp_label.text = "HP %d / %d" % [value, max_value]
-
-func set_special(value: int, max_value: int) -> void:
-	special_bar.max_value = max_value
-	target_special = float(value)
-	special_label.text = "Special %d / %d" % [value, max_value]
 
 func set_exp(value: int, max_value: int) -> void:
 	exp_bar.max_value = max_value
@@ -92,7 +78,6 @@ func show_level_up(new_level: int) -> void:
 # --- Smooth bar fill ---
 func _process(delta: float) -> void:
 	hp_bar.value = lerp(float(hp_bar.value), target_hp, bar_lerp_speed * delta)
-	special_bar.value = lerp(float(special_bar.value), target_special, bar_lerp_speed * delta)
 	exp_bar.value = lerp(float(exp_bar.value), target_exp, bar_lerp_speed * delta)
 
 # --- Popup UI creation (no .tscn changes needed) ---
@@ -327,6 +312,36 @@ func _on_main_menu_pressed() -> void:
 		RunManager.end_run()
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
-func _on_save_game_pressed() -> void:
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"): # ESC by default
+		_toggle_pause_menu()
+
+func _toggle_pause_menu() -> void:
+	var is_open = pause_menu.visible
+	pause_menu.visible = not is_open
+	get_tree().paused = not is_open
+
+func _on_resume_pressed() -> void:
+	pause_menu.visible = false
+	get_tree().paused = false
+
+func _on_settings_pressed() -> void:
+	print("Settings not implemented yet")
+
+func _on_save_exit_pressed() -> void:
+	get_tree().paused = false
 	RunManager.save_current_run()
-	
+	await TransitionLayer.play_out()
+	await get_tree().create_timer(0.3).timeout
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	await TransitionLayer.play_in()
+
+func _on_quit_run_pressed() -> void:
+	get_tree().paused = false
+	if RunManager.is_run_active:
+		RunManager.end_run()
+	await TransitionLayer.play_out()
+	await get_tree().create_timer(0.3).timeout
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	await TransitionLayer.play_in()

@@ -38,10 +38,6 @@ func _process(_delta: float) -> void:
 		var hc: HealthComponent = player.get_node("HealthComponent")
 		hud.set_hp(hc.current_health, hc.max_health)
 
-	if player.has_node("SpecialMeterComponent"):
-		var sm: SpecialMeterComponent = player.get_node("SpecialMeterComponent")
-		hud.set_special(sm.special, sm.max_special)
-
 	if player.has_node("ExperienceComponent"):
 		var xp: ExperienceComponent = player.get_node("ExperienceComponent")
 		hud.set_exp(xp.experience, xp.exp_to_next)
